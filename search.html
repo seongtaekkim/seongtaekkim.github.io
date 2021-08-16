@@ -194,7 +194,7 @@ into the {body} of the default.hbs template -->
         "title": "java 강좌(1) - Python 두번째 강의",
             "author": "seongtaekkim",
             "category": "",
-            "content": "Python 강좌는 여러 절로 구성되어 있습니다.     java 강좌(1) - java 기본    java 강좌(2) java  제어문두번째 강의",
+            "content": "Python 강좌는 여러 절로 구성되어 있습니다.     java 강좌(1) - java 기본    java 강좌(2) java  제어문---layout: null---&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;urlset xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;        xsi:schemaLocation=&quot;http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd&quot;        xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;&gt;    {% for post in site.posts %}    &lt;url&gt;        &lt;loc&gt;{{ site.url }}{{ post.url }}.html&lt;/loc&gt;        {% if post.lastmod == null %}        &lt;lastmod&gt;{{ post.date | date_to_xmlschema }}&lt;/lastmod&gt;        {% else %}        &lt;lastmod&gt;{{ post.lastmod | date_to_xmlschema }}&lt;/lastmod&gt;        {% endif %}        {% if post.sitemap.changefreq == null %}        &lt;changefreq&gt;weekly&lt;/changefreq&gt;        {% else %}        &lt;changefreq&gt;{{ post.sitemap.changefreq }}&lt;/changefreq&gt;        {% endif %}        {% if post.sitemap.priority == null %}        &lt;priority&gt;0.5&lt;/priority&gt;        {% else %}        &lt;priority&gt;{{ post.sitemap.priority }}&lt;/priority&gt;        {% endif %}    &lt;/url&gt;    {% endfor %}&lt;/urlset&gt;두번째 강의",
         "url": "/java-advanced"
     }
     ,

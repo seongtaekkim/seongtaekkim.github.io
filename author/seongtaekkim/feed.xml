@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://seongtaekkim.github.io/author/seongtaekkim/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" />
-  <updated>2021-08-16T17:45:21+09:00</updated>
+  <updated>2021-08-16T18:06:52+09:00</updated>
   <id>https://seongtaekkim.github.io/author/seongtaekkim/feed.xml</id>
 
   
@@ -42,6 +42,40 @@
     &lt;li&gt;&lt;a href=&quot;./java-basic&quot;&gt;java 강좌(1) - java 기본&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href=&quot;./java-advanced&quot;&gt;java 강좌(2) java  제어문&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;noscript&gt;&lt;pre&gt;---
+layout: null
+---
+
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+&amp;lt;urlset xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;
+        xsi:schemaLocation=&amp;quot;http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd&amp;quot;
+        xmlns=&amp;quot;http://www.sitemaps.org/schemas/sitemap/0.9&amp;quot;&amp;gt;
+    {% for post in site.posts %}
+    &amp;lt;url&amp;gt;
+        &amp;lt;loc&amp;gt;{{ site.url }}{{ post.url }}.html&amp;lt;/loc&amp;gt;
+        {% if post.lastmod == null %}
+        &amp;lt;lastmod&amp;gt;{{ post.date | date_to_xmlschema }}&amp;lt;/lastmod&amp;gt;
+        {% else %}
+        &amp;lt;lastmod&amp;gt;{{ post.lastmod | date_to_xmlschema }}&amp;lt;/lastmod&amp;gt;
+        {% endif %}
+
+        {% if post.sitemap.changefreq == null %}
+        &amp;lt;changefreq&amp;gt;weekly&amp;lt;/changefreq&amp;gt;
+        {% else %}
+        &amp;lt;changefreq&amp;gt;{{ post.sitemap.changefreq }}&amp;lt;/changefreq&amp;gt;
+        {% endif %}
+
+        {% if post.sitemap.priority == null %}
+        &amp;lt;priority&amp;gt;0.5&amp;lt;/priority&amp;gt;
+        {% else %}
+        &amp;lt;priority&amp;gt;{{ post.sitemap.priority }}&amp;lt;/priority&amp;gt;
+        {% endif %}
+
+    &amp;lt;/url&amp;gt;
+    {% endfor %}
+&amp;lt;/urlset&amp;gt;&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/seongtaekkim/930b19a8b15c9384b3ec66a3c3f57a7a.js&quot;&gt; &lt;/script&gt;
 
 &lt;p&gt;두번째 강의&lt;/p&gt;</content>
 
