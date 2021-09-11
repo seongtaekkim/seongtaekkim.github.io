@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://seongtaekkim.github.io/author/seongtaekkim/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" />
-  <updated>2021-08-21T14:15:14+09:00</updated>
+  <updated>2021-09-11T19:25:22+09:00</updated>
   <id>https://seongtaekkim.github.io/author/seongtaekkim/feed.xml</id>
 
   
@@ -32,6 +32,288 @@
 
   
     <entry>
+      <title type="html">스프링 따라하기</title>
+      <link href="https://seongtaekkim.github.io/springframework-remake" rel="alternate" type="text/html" title="스프링 따라하기" />
+      <published>2021-09-11T15:36:01+09:00</published>
+      <updated>2021-09-11T15:36:01+09:00</updated>
+      <id>https://seongtaekkim.github.io/springframework-remake</id>
+      <content type="html" xml:base="https://seongtaekkim.github.io/springframework-remake">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
+&lt;ul class=&quot;table-of-contents-list&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-remake&quot;&gt;springframework - 따라하기&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-architecture&quot;&gt;springframework - 아키텍처&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;springframework-따라하기&quot;&gt;SpringFramework 따라하기&lt;/h2&gt;
+
+&lt;p&gt;1.개요&lt;/p&gt;
+
+&lt;p&gt;springFramework 동작방식을 이해하고, 간단한 toy-framework를 만들어보자.&lt;/p&gt;
+
+&lt;p&gt;2.목표&lt;/p&gt;
+
+&lt;p&gt;toy-framework를 활용한 웹사이트 로그인&lt;/p&gt;
+
+&lt;p&gt;3.구현방식&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;spring container 구현&lt;/li&gt;
+  &lt;li&gt;aop 구현&lt;/li&gt;
+  &lt;li&gt;dataAccess 구현&lt;/li&gt;
+  &lt;li&gt;context 구현&lt;/li&gt;
+  &lt;li&gt;web mvc 구현&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;4.기한&lt;/p&gt;
+
+&lt;p&gt;21.09.11 ~ 12.31&lt;/p&gt;
+
+&lt;p&gt;5.개발환경&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;tomcat&lt;/li&gt;
+  &lt;li&gt;jdk11&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;6.참조 레퍼런스&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;springframework 4.3x&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>seongtaekkim</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="spring" />
+      
+
+      
+        <summary type="html">– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 SpringFramework 따라하기</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">스프링 따라하기</title>
+      <link href="https://seongtaekkim.github.io/springframework-architecture" rel="alternate" type="text/html" title="스프링 따라하기" />
+      <published>2021-09-11T15:36:01+09:00</published>
+      <updated>2021-09-11T15:36:01+09:00</updated>
+      <id>https://seongtaekkim.github.io/springframework-architecture</id>
+      <content type="html" xml:base="https://seongtaekkim.github.io/springframework-architecture">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
+&lt;ul class=&quot;table-of-contents-list&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-remake&quot;&gt;springframework - 따라하기&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-architecture&quot;&gt;springframework - 아키텍처&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;springframework-architecture&quot;&gt;SpringFramework architecture&lt;/h1&gt;
+
+&lt;h2 id=&quot;아키텍처&quot;&gt;아키텍처&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.kakaocdn.net/dn/dXQ6s0/btqCXvb5fVY/AzjKoJZiB8jfWvkN1Njbhk/img.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;실제-구동순서&quot;&gt;실제 구동순서&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Web Application&lt;/strong&gt; = &lt;strong&gt;Web Server&lt;/strong&gt; + &lt;strong&gt;Web Container&lt;/strong&gt;(= Servlet Container)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Web Container&lt;/strong&gt; 는 유저의 요청에 따라 &lt;strong&gt;Servlet 자원에 대한 생명주기를 관리&lt;/strong&gt;합니다.&lt;/li&gt;
+  &lt;li&gt;webContainer : servlet 단위 처리&lt;/li&gt;
+  &lt;li&gt;springContainer : bean 단위처리&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;​&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://aaronryu.github.io/2021/02/14/a-tutorial-for-spring-mvc-and-security/spring-web-application-description-3-filter-and-interceptor.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;웹 애플리케이션이 실행되면 Tomcat(WAS)에 의해 web.xml이 로딩된다.&lt;/p&gt;
+
+    &lt;p&gt;(load-on-startup으로 톰캣 시작시 servlet생성 가능하도록 설정 가능)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;web.xml에 등록되어 있는 ContextLoaderListener(Java class)가 생성된다. ContextLoaderListener 클래스는 ServletContextListener 인터페이스를 구현하고 있으며, ApplicationContext를 생성하는 역할을 수행한다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;생성된 ContextLoaderListener는 applicationContext.xml을 로딩한다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;applicationContext.xml에 등록되어 있는 설정에 따라 Spring Container가 구동된다. 이때 개발자가 작성한 비즈니스 로징에 대한 부분과 DAO, VO 객체들이 생성된다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;클라이언트로부터 웹애플리케이션 요청이 온다. (FrontController 패턴에 의해 수행된다.)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;DispatcherServlet(Servlet)이 생성된다. DispatcherServlet은 FrontController의 역할을 수행한다. 클라이언트로부터 요청 온 메시지를 분석하여 알맞은 PageController에게 전달하고 응답을 받아 요청에 따른 응답을 어떻게 할지 결정만 한다. 실질적인 작업은 PageControlle에서 이뤄지기 때문이다. 이러한 클래스들을 HandlerMapping, ViewResolver클래스라고 한다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;DispatcherServlet은 servlet-context.xml(spring-mvc.xml)을 로딩한다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;두 번째 Spring Container가 구동되면 응답에 맞는 PageController들이 동작한다. 이때 첫 번째 Spring Container가 구동되면서 생성된 DAO, VO, ServiceImpl 클래스들과 협업하여 알맞은 작업을 처리하게 된다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;모듈-의존관계&quot;&gt;모듈 의존관계&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(모듈 == .jar)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://media.vlpt.us/images/wldus9503/post/b172f1a8-1463-4ee8-89c0-0fe8786b4fe8/spring%EB%AA%A8%EB%93%88%20%EC%9D%98%EC%A1%B4%EA%B4%80%E3%84%B1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;모듈별-역할&quot;&gt;모듈별 역할&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ArtifactId&lt;/th&gt;
+      &lt;th&gt;Description&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-aop&lt;/td&gt;
+      &lt;td&gt;프록시 기반 AOP를 만들 때 필요한 어드바이스, 포인트컷, 프록시 팩토리빈, 자동 프록시 생성기 등을 제공&lt;br /&gt; - 필수 라이브러리 - Beans&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-aspects&lt;/td&gt;
+      &lt;td&gt;스프링이 제공하는 AspectJ AOP를 사용할 때 필요한 모듈&lt;br /&gt; - JPA 지원 기능 사용시 ORM, 트랜잭션 기능 지원시 Transaction 필요&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-beans&lt;/td&gt;
+      &lt;td&gt;스프링 DI 기능의 핵심인 빈 팩토리와 DI 기능을 제공하는 모듈&lt;br /&gt; - 빈 메타 정보, 빈 리더, 빈 팩토리의 구현과 프로퍼티 에디터가 포함&lt;br /&gt; - 필수 라이브러리 - ASM, Core&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-context&lt;/td&gt;
+      &lt;td&gt;어플리케이션 컨텍스트 기능을 제공&lt;br /&gt;- 어플리케이션 컨텍스트를 만드는 데 필요한 대부분의 기능과 빈 스캐너, 자바코드 설정 기능, EJB 지원, 포메터, 로드타임 위빙, 표현식,&lt;br /&gt;- 단순한 빈팩토리가 아닌 엔터프라이즈 어플리케이션 프레임워크로 사용하기 위해 반드시 필요합니다.&lt;br /&gt;- 필수 라이브러리 - AOP, Expression&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-context-support&lt;/td&gt;
+      &lt;td&gt;JMX JNDI, 리모팅, 스케줄링, 스크립트 언어 지원, 검증기 등의 컨테이너로서의 주요한 기능을 담고 있습니다.어플리케이션 컨텍스트에서 필요로 하는 부가기능을 지원&lt;br /&gt; - EhCache, 메일 추상화 서비스, CommonJ와 Quartz 스케줄링, FreeMarker, JasperReports, Velocity 팩토리 기능을 제공&lt;br /&gt;- 위의 기능을 사용하지 않으면 해당모듈은 필요업지만, 스프링 MVC가 Context.Support에 의존하므로 스프링 MVC를 사용한다면 필수로 추가해야 한다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-core&lt;/td&gt;
+      &lt;td&gt;스프링 모듈에서 필요로 하는 공통 기능을 갖는 핵심 모듈&lt;br /&gt; - 스프링에서 사용하는 주요 어노테이션, 컨버터, 상수, 유틸리티 클래스 등을 제공&lt;br /&gt; - 선택적 의존 - ASM&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-expression&lt;/td&gt;
+      &lt;td&gt;스프링 표현식 언어(SpEL) 기능을 지원&lt;br /&gt; - 필수 라이브러리 - Core&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-instrument&lt;/td&gt;
+      &lt;td&gt;스프링의 로드타임위버(LTW) 기능을 적용할 때 필요함.&lt;br /&gt;JVM의 -javaagent 옵션을 자용해 자바에이전트로도 사용됨.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-instrument-tomcat&lt;/td&gt;
+      &lt;td&gt;애플리케이션이 아닌 톰캣 서버의 클래스 로더로 사용하는 모듈&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-jdbc&lt;/td&gt;
+      &lt;td&gt;JDBC 템플릿을 포함한 JDBC 지원 기능을 제공&lt;br /&gt;- JdbcTemplate 등의 JDBC 지원 오브젝트 외에도 스프링이 직접 제공하는 DataSource 구현 클래스들이 제공&lt;br /&gt;- 필수 라이브러리 - 트랜잭션&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-jms&lt;/td&gt;
+      &lt;td&gt;스프링의 JMS 지원 기능을 사용할 때 필요한 모듈&lt;br /&gt; - 필수 라이브러리 - Transaction&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-messaging&lt;/td&gt;
+      &lt;td&gt;스프링 메세징 기능을 제공한다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-orm&lt;/td&gt;
+      &lt;td&gt;하이버네이트, JPA, JDO, iBatis와 같은 ORM에 대한 스프링의 지원 기능&lt;br /&gt; - 내부적으로 JDBC를 사용한다.&lt;br /&gt; - 필수 라이브러리 : JDBC&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-oxm&lt;/td&gt;
+      &lt;td&gt;Object/XML Mapping&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-test&lt;/td&gt;
+      &lt;td&gt;Test는 스프링의 테스트 지원기능을 가진 모듈&lt;br /&gt;(테스트 컨텍스트 프레임워크나 목 오브젝트 등을 이용)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-tx&lt;/td&gt;
+      &lt;td&gt;스프링의 데이터 액세스 추상화의 공통 기능을 담고 있습니다.&lt;br /&gt; - DataAcssessException 예외 계층구조와 트랜잭션 추상화 기능, 트랜잭션 동기화 저장소 그리고 JCA 기능을 포함&lt;br /&gt;- 필수 라이브러리 - Context&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-web&lt;/td&gt;
+      &lt;td&gt;스프링 웹 기술의 공통적인 기능을 정의한 모듈&lt;br /&gt;- 바인딩, 컨텍스트 로더, 필터, 멀티파트, 메세지 컨버터 기능을 제공&lt;br /&gt;- 스프링 MVC 외에도 스프링이 지원하는 스트럿츠, JSF 등을 적용할 때 필요&lt;br /&gt;- Caucho, HttpInvoker, JAX-RPC, JAX-WS 등의 리모팅 기능도 포함&lt;br /&gt;- 필수 라이브러리 - Context&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-webmvc&lt;/td&gt;
+      &lt;td&gt;스프링 MVC 기능을 제공하는 모듈&lt;br /&gt; - 필수 라이브러리 - Web, Context.Support&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;portlet&lt;/td&gt;
+      &lt;td&gt;Portlet 개발에 사용하는 스프링 모듈&lt;br /&gt; - 필수 라이브러리 - Web.Servlet&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring-websocket&lt;/td&gt;
+      &lt;td&gt;WebSocket and SockJS infrastructure, including STOMP messaging support&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;spring -asm&lt;/td&gt;
+      &lt;td&gt;ASM 모듈은 클래스 바이트코드 조작 및 분석 프레임워크인 ASM을 재 패키징한 모듈입니다.&lt;br /&gt; - ASM 프레임워크는 스프링 뿐 아니라 여러 프레임워크에서 및 라이브러리에서 사용되는데 이때 스프링 프레임워크와&lt;br /&gt;ASM을 사용하는 다른 프레임워크와의 충돌을 방지하기 위해 org.springframework.asm 패키지로 재패키징해 독립적인 모듈로 제공합니다.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;출처&quot;&gt;출처&lt;/h4&gt;
+
+&lt;p&gt;1.스프링 모듈 의존관계 설명&lt;/p&gt;
+
+&lt;p&gt;https://dololak.tistory.com/2&lt;/p&gt;
+
+&lt;p&gt;2.ApplicationContext 와 WebApplicationContext  차이&lt;/p&gt;
+
+&lt;p&gt;https://dololak.tistory.com/21?category=636502&lt;/p&gt;
+
+&lt;p&gt;3.스프링 동작순서&lt;/p&gt;
+
+&lt;p&gt;https://aaronryu.github.io/2021/02/14/a-tutorial-for-spring-mvc-and-security/&lt;/p&gt;
+
+&lt;p&gt;※ 저작권 문제 시 삭제하겠습니다.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>seongtaekkim</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="spring" />
+      
+
+      
+        <summary type="html">– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 SpringFramework architecture</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
       <title type="html">토비의스프링2권 2장</title>
       <link href="https://seongtaekkim.github.io/spring-toby2_2" rel="alternate" type="text/html" title="토비의스프링2권 2장" />
       <published>2021-08-19T19:36:01+09:00</published>
@@ -44,36 +326,34 @@
 
 &lt;h1 id=&quot;트랜잭션&quot;&gt;트랜잭션&lt;/h1&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;EJB 가 제공했던 엔터프라이즈 서비스에서 가장 매력적인 것은 바로 선언적 트랜잭션이다. 선언적 트랜잭션 경계설정 기능을 이용하면 코드 내에서 직접 트랜잭션을 관리 하고 트랜잭션 정보를 파라미터로 넘겨서 사용하지 않아도 된다. 선언적 트랜잭션의 가장 큰 장점은 트랜잭션 스크립트 방식의 코드를 탈피할 수 있다는 것이다.
-트랜잭션 스크립트 방식의 코드를 탈피할 수 있다는 것이다.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;스프링이 처음 등장했을 때의 모토는 “객체지향 원칙에 충실한 POJO 에 엔터프라이즈 서비스를 제공한다”였다. 엔터프라이즈 서비스가 제공되는 컴포넌트를 지향하던 당시의 EJB는 특정 클래스의 상속과 인터페이스 구현을 강제하고 툴의 지원 없이는 작성이 거의 불가할 정도로 복잡한 XML 설정파일과 고가의 서버와 컨테이너 등을 필요로 했다.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;EJB 가 제공했던 엔터프라이즈 서비스에서 가장 매력적인 것은 바로 선언적 트랜잭션이다.&lt;/strong&gt; &lt;strong&gt;선언적 트랜잭션 경계설정 기능을 이용하면 코드 내에서 직접 트랜잭션을 관리 하고 트랜잭션 정보를 파라미터로 넘겨서 사용하지 않아도 된다. 선언적 트랜잭션의 가장 큰 장점은 트랜잭션 스크립트 방식의 코드를 탈피할 수 있다는 것이다.&lt;/strong&gt;
-트랜잭션 스크립트란 하나의 트랜잭션 안에서 동작해야 하는 코드를 한 군데 모아서 만드는 방식이다. 보통 트랜잭션마다 하나의 메소드로 구성된다. 메소드의 앞부분에서 DB를 연결하고 트랜잭션을 시작히는 코드가 나오고， 이렇게 만들어진 트랜잭션 안에서 DB를 액세스히는 코드와 그 결괴를 가지고 비즈니스 로직을 적용하는 묘드가 뒤엉켜서 등장한다. 물론 트랜잭션 내의 일부 작업은 메소드를 분리해서 만들 수는 있지만， 그래도 같은 트랜잭션 안에서 동작함을 보장하려면 Connection과 같은 트랜잭션 정보가 담긴 파라미터를 계속 물고 다녀야 한다. 트랜잭션 스크립트 방식의 코드에는 중복이 자주 발생한다. 지주 사용되는 DB 액세스 로직이 여러 트랜잭션 스크립트 안에 중복돼서 등장하기 쉽기 때문이다. &lt;strong&gt;비즈니스 로직과 데이터 액세스 로직이 한데 코드에 섞여 있는 문제는 말할 것도 없다.&lt;/strong&gt;
+트랜잭션 스크립트란 하나의 트랜잭션 안에서 동작해야 하는 코드를 한 군데 모아서 만드는 방식이다. 보통 트랜잭션마다 하나의 메소드로 구성된다. 메소드의 앞부분에서 DB를 연결하고 트랜잭션을 시작히는 코드가 나오고， 이렇게 만들어진 트랜잭션 안에서 DB를 액세스히는 코드와 그 결과를 가지고 비즈니스 로직을 적용하는 코드가 뒤엉켜서 등장한다. 물론 트랜잭션 내의 일부 작업은 메소드를 분리해서 만들 수는 있지만， 그래도 같은 트랜잭션 안에서 동작함을 보장하려면 Connection과 같은 트랜잭션 정보가 담긴 파라미터를 계속 물고 다녀야 한다. 트랜잭션 스크립트 방식의 코드에는 중복이 자주 발생한다. 지주 사용되는 DB 액세스 로직이 여러 트랜잭션 스크립트 안에 중복돼서 등장하기 쉽기 때문이다. &lt;strong&gt;비즈니스 로직과 데이터 액세스 로직이 한데 코드에 섞여 있는 문제는 말할 것도 없다.&lt;/strong&gt;
 트랜잭션 스크립트 코드에 DAO 패턴을 적용해서 데이터 액세스 로직을 분리하는 시도를 해볼 수 있겠지만， 트랜잭션을 명시적으로 시작하고 종료하는 경계 설정코드가 비즈니스 로직 코드에 함께 등장하는 것과 매번 트랜잭션 정보를 메소드 따라미터로 넘기는 불편은 여전히 남아 있다.
-&lt;strong&gt;하지만 선언적 트랜잭션 경계설정을 시용하면 이런 문제를 모두 해결할 수 있다. 트랜잭션이 시작되고 종료되는 지점은 별도의 설정을 통해 결정된다.&lt;/strong&gt; 또 작은 단위로 분리되어 있는 데이터 액세스 로직과 비즈니 스 로직 컴포넌트와 메소드를 조합해서 하나의 트랜잭션에서 동작하게 만드는 것도 간단하다. 선언적 트랜잭션이 제공히는 트랜 잭션 전파 기능 덕분이다. 의미 있는 작은 단위로 만들어진 오브젝트와 메소드를 적절한 순서대로 조합해서 호출하기만 하면 코드의 중복 없이 다양한 트랜잭션 안에서 동작 하는 코드를 만들 수 있다. A, B, C 라는 세 개의 오브젝트 또는 메소드가 있다고 하자.&lt;/p&gt;
+&lt;strong&gt;하지만 선언적 트랜잭션 경계설정을 사용하면 이런 문제를 모두 해결할 수 있다. 트랜잭션이 시작되고 종료되는 지점은 별도의 설정을 통해 결정된다.&lt;/strong&gt; 또 작은 단위로 분리되어 있는 데이터 액세스 로직과 비즈니 스 로직 컴포넌트와 메소드를 조합해서 하나의 트랜잭션에서 동작하게 만드는 것도 간단하다. 선언적 트랜잭션이 제공히는 트랜 잭션 전파 기능 덕분이다. 의미 있는 작은 단위로 만들어진 오브젝트와 메소드를 적절한 순서대로 조합해서 호출하기만 하면 코드의 중복 없이 다양한 트랜잭션 안에서 동작 하는 코드를 만들 수 있다. A, B, C 라는 세 개의 오브젝트 또는 메소드가 있다고 하자.&lt;/p&gt;
 
-&lt;p&gt;A나 B 나 C 가 그 자체로 독립적인 트랜잭션으로 동작하게 하려면 A, B, C를 각각 트랜 잭션 경계로 지정해주면 된다 A가 시작될 때 트랜잭션이 시작되고 A의 메소드를 종료할 때 트랜잭션이 함께 종료된다. 그런데 A-B, A-C, B-C ， A-B-C와 같은 구성으로 트랜잭션을 만들고 싶을 수도 있다. 이때도 A-B 의 코드를 하나로 묶어서 새로운 트랜잭션 스크립트를 만들 필요는 없다.&lt;strong&gt;A 에서 B 의 코드를 호출하게 하고 각각의 트랜잭션 전파 속성을 ‘트랜잭션 펼요(REQUIRED)’로 해주면 된다&lt;/strong&gt;. 이렇게 해두면 A 에서 시작된 트랜잭션에 B 의 코드가 자동으로 참여하게 된다. 어떤 조합으로 만들어도 상관없다.&lt;/p&gt;
+&lt;p&gt;A나 B 나 C 가 그 자체로 독립적인 트랜잭션으로 동작하게 하려면 A, B, C를 각각 트랜 잭션 경계로 지정해주면 된다 A가 시작될 때 트랜잭션이 시작되고 A의 메소드를 종료할 때 트랜잭션이 함께 종료된다. 그런데 A-B, A-C, B-C ， A-B-C와 같은 구성으로 트랜잭션을 만들고 싶을 수도 있다. 이때도 A-B 의 코드를 하나로 묶어서 새로운 트랜잭션 스크립트를 만들 필요는 없다.&lt;strong&gt;A 에서 B 의 코드를 호출하게 하고 각각의 트랜잭션 전파 속성을 ‘트랜잭션 필요(REQUIRED)’로 해주면 된다&lt;/strong&gt;. 이렇게 해두면 A 에서 시작된 트랜잭션에 B 의 코드가 자동으로 참여하게 된다. 어떤 조합으로 만들어도 상관없다.&lt;/p&gt;
 
 &lt;p&gt;선언적 트랜잭션 경계설정을 사용하면， 결국 코드의 중복을 제거하고 작은 단위의 컴포넌트로 쪼개서 개발한 후에 이를 조합해서 쓸 수 있다. 다 다양한 로직이 복잡하게 결합돼서 하나의 업무를 처리하는 엔터프라이즈 시스뱀의 요구조건을 가장 잘 충족시켜줄 기술이다.
 EJB 의 이런 선언적 트랜잭션 기능을 복잡한 환경이나 구현조건 없이 평범한 POJO로 만든 코드에 적용하게 해주는 것이 바로 스프링이다. 스프링은 EJB 등에서나 제공 되던 엔터프라이즈 서비스를 POJO 의 장점을 유지한 채로 사용할 수 있게 만들어준다.
 DI 로 대표되는， 스프링의 객체지향 설계 원칙에 충실한 핵심 기술이 이를 가능하게 만들어준다.
-&lt;strong&gt;스프링의 선언적 트랜잭션은 매우 매력적인 기능이다. JavaEE 서버에서 통작히는 엔티티빈이나 JPA로 만든 컴포넌트에 JTA를 이용한 글로벌 트랜잭션을 적용해야만 가능했던 고급 기능을 간단한 톰켓 서버에서 동작히는 가벼운 애플리케이션에도 적용해 주기 때문이다.&lt;/strong&gt; &lt;strong&gt;또한 JDBC. JPA 하이버네이트 iBatis. JDO 등 스프링이 지원하는 대부분의 데이터 액세스 기술과 JMS 메시징 서비스， CCI 처럼 트랜잭션 개념을 지원한 서비스에도 적용할 수 있다. 원한다면 언제든지 WAS 가 제공하는 JTA와 연결해서 글로벌 트랜잭션 서비스의 혜택을 받을 수도 있다.&lt;/strong&gt;
+&lt;strong&gt;스프링의 선언적 트랜잭션은 매우 매력적인 기능이다. JavaEE 서버에서 동작히는 엔티티빈이나 JPA로 만든 컴포넌트에 JTA를 이용한 글로벌 트랜잭션을 적용해야만 가능했던 고급 기능을 간단한 톰켓 서버에서 동작히는 가벼운 애플리케이션에도 적용해 주기 때문이다.&lt;/strong&gt; &lt;strong&gt;또한 JDBC. JPA 하이버네이트 iBatis. JDO 등 스프링이 지원하는 대부분의 데이터 액세스 기술과 JMS 메시징 서비스， CCI 처럼 트랜잭션 개념을 지원한 서비스에도 적용할 수 있다. 원한다면 언제든지 WAS 가 제공하는 JTA와 연결해서 글로벌 트랜잭션 서비스의 혜택을 받을 수도 있다.&lt;/strong&gt;
 스프링을 처음 사용히는 개발자가 가장 매력을 느끼는 기능이 이 선언적 트랙잭션 기능이라고 한다. 스프링의 그 밖의 장점은 잘 모르더라도 선언적 트랜잭션 기능이 절실히 펼요해서 스프링을 계속 사용하겠다는 개발자도 적지 않다. 그만큼 효과적인 엔터 프라이즈 개발애 목 필요한 중요한 기능이다.
 이 절에서는 스프링이 제공동}는 선언적 트랜잭션 경계설정의 방법과 종류를 자세히 알아보겠다. 트랜잭션 예제 코드는 springbook.learningtest.spring.tx 패키지에서 찾을수있다.&lt;/p&gt;
 
 &lt;h2 id=&quot;261-트랜잭션-추상화와-동기화&quot;&gt;2.6.1 트랜잭션 추상화와 동기화&lt;/h2&gt;
 
 &lt;p&gt;스프링이 제공히는 트랜잭션 서비스는 트랜잭션 추상화와 트랜잭션 동기화 두 가지로 생각해볼수있다.
-트랜잭션 서비스의 종류는 데이터 액세스 기술보다 더 다양하다. 트&lt;strong&gt;랜잭션 서비스는 데이터 액세스 기술은 변하지 않더라도 환경에 따라 바뀔 수 있기 때 문이다.&lt;/strong&gt; 또， 스프링 없이 선언적 트랜잭션을 이용하려면 특정 기술과 서버 플랫폼， 특정 트랜잭션 서비스에 종속될 수밖에 없다. 스프링은 데이터 액세스 기술과 트랜잭션 서비스 사이의 종속성을 제거하고 스프링이 제공하는 트랜잭션 추상 계층을 이용해서 트랜잭션 기능을 활용하 도록 만들어준다. 이를 통해 트랜잭션 서비스의 종류나 환경이 바뀌더라도 트랜잭션을 사용하는 코드는 그대로 유지할 수 있는 유연성을 얻을 수 있다.
+트랜잭션 서비스의 종류는 데이터 액세스 기술보다 더 다양하다. &lt;strong&gt;트랜잭션 서비스는 데이터 액세스 기술은 변하지 않더라도 환경에 따라 바뀔 수 있기 때 문이다.&lt;/strong&gt; 또， 스프링 없이 선언적 트랜잭션을 이용하려면 특정 기술과 서버 플랫폼， 특정 트랜잭션 서비스에 종속될 수밖에 없다. 스프링은 데이터 액세스 기술과 트랜잭션 서비스 사이의 종속성을 제거하고 스프링이 제공하는 트랜잭션 추상 계층을 이용해서 트랜잭션 기능을 활용하 도록 만들어준다. 이를 통해 트랜잭션 서비스의 종류나 환경이 바뀌더라도 트랜잭션을 사용하는 코드는 그대로 유지할 수 있는 유연성을 얻을 수 있다.
 스프링의 트랜잭션 동기화는 트랜잭션을 일정 범위 안에서 유지해주고， 어디서든 자유롭게 접근할 수 있게 만들어준다. 트랜잭션 동기화는 트랜잭션 추상화， 데이터 액세스 기술을 위한 랩플릿과 더불어 선언적 트랜잭션을 가능하게 해주는 핵심기능이다.
 스프링의 서비스추상화와동기회에 관한동작원리와특정은 Vol.l 에서 자세히 다뤘 으므로， 여&lt;strong&gt;기서는 데이터 액세스 기술에 따라 사용할 수 있는 트랜잭션 추상화 클래스의 종류와 사용 방법을 알아보겠다.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;platformtransactionmanager&quot;&gt;PlatformTransactionManager&lt;/h3&gt;
 
-&lt;p&gt;스프링 트랜잭션 추상화의 핵심 인터페이스는 PlatformTransactionManager 다. 모든 스프링의 트랜잭션 기능과 코드는 이 인터페이스를 통해서 로우레벨의 트랜잭션 서비 스를 이용할 수 있다. PlatformTransactionManager 인터페이스는 리스트 2-42와 같이세 개의 메 소드를 갖고 있다.&lt;/p&gt;
+&lt;p&gt;스프링 트랜잭션 추상화의 핵심 인터페이스는 PlatformTransactionManager 다. 모든 스프링의 트랜잭션 기능과 코드는 이 인터페이스를 통해서 로우레벨의 트랜잭션 서비스를 이용할 수 있다. PlatformTransactionManager 인터페이스는 리스트 2-42와 같이세 개의 메소드를 갖고 있다.&lt;/p&gt;
+
+&lt;p&gt;​&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PlatformTransactionManager&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; 
     &lt;span class=&quot;nc&quot;&gt;TransactionStatus&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getTransaction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;TransactionDefinition&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;definition&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TransactionException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
@@ -84,8 +364,8 @@ DI 로 대표되는， 스프링의 객체지향 설계 원칙에 충실한 핵�
 
 &lt;p&gt;리스트 2-42 PlatformTransactionManager 인터페이스&lt;/p&gt;
 
-&lt;p&gt;PlatformTransactionManager는 트랜잭션 경계를 지정히는 데 사용한다. 트랜잭션이 어디서 시작하고 종료하는지 종료할 때 정상 종료(커 밋) 인지 비정상 종료(롤백) 인지를 결정히는 것이다. 스프링에서는 시작과 종료를 트랜잭션 전파 기법을 이용해 자유롭게 조합하고 확장할 수 있다. 그래서 트랜잭션을 시작한다는 의미의 begin() 과 같은 메소드 대신 적절한 트랜잭션을 가져온다는 의미의 getTransaction( ) 메소드를 사용한다.
-&lt;strong&gt;getTransaction() 은 트랜잭션 속성에 따라서 새로 시작하거나 진행 중인 트랜잭션에 참여하거나， 진행 중인 트랜잭션을 무시하고 새로운 트랜잭션을 만드는 식으로 상횡에 따라다르게동작한다.&lt;/strong&gt;
+&lt;p&gt;PlatformTransactionManager는 트랜잭션 경계를 지정히는 데 사용한다. 트랜잭션이 어디서 시작하고 종료하는지 종료할 때 정상 종료(커밋) 인지 비정상 종료(롤백) 인지를 결정히는 것이다. 스프링에서는 시작과 종료를 트랜잭션 전파 기법을 이용해 자유롭게 조합하고 확장할 수 있다. 그래서 트랜잭션을 시작한다는 의미의 begin() 과 같은 메소드 대신 적절한 트랜잭션을 가져온다는 의미의 getTransaction( ) 메소드를 사용한다.
+&lt;strong&gt;getTransaction() 은 트랜잭션 속성에 따라서 새로 시작하거나 진행 중인 트랜잭션에 참여하거나， 진행 중인 트랜잭션을 무시하고 새로운 트랜잭션을 만드는 식으로 상황에 따라다르게동작한다.&lt;/strong&gt;
 TransactionDefinition 은 트랜잭션의 네 가지 속성을 나타내는 인터페이스다.
 &lt;strong&gt;TransactionStatus 는 현재 참여하고 있는 트랜잭션의 ID와 구분정보를 담고 있다. 커빗 또는 롤백 시에 이 TransactionStatus 를 사용한다.&lt;/strong&gt;
 &lt;strong&gt;선언적 트랜잭션 방식을 시용할 것이라면 사실 PlatformTransactionManager 인터 페이스의 시용 방법은 몰라도 상관없다&lt;/strong&gt;. 다만 이 추상화된 인터페이스를 구현한 트랜 잭션 서비스 클래스의 종류를 알고 적절한 것을 선택해서 빈으로 둥록하는 방법만 알고 있으면 된다. 가끔 태스트에서 트랜잭션을 제어해가면서 태스트 코드를 만들어야 할 경우가 있는데， 그때는 PlatformTransactionManager를 직접 이용해야 할 수도 있다.&lt;/p&gt;
@@ -113,13 +393,16 @@ TransactionDefinition 은 트랜잭션의 네 가지 속성을 나타내는 인�
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org . .. SimpleDriverDataSource&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;DataSourceTransactionManager 가 사용할 DataSource는 getConnection() 이 호출될 때마다 매번 새로운 Connection을 돌려줘야 한다. ThreadLocal 등을 이용해 트랜잭션을 저장해두고 돌려주는 특별한 기능을 가진 DataSource를 사용하면 안 된다.&lt;/p&gt;
 
 &lt;p&gt;애플리케이션 코드에서 트랜잭션 매니저가 관리하는 Connection 을 가져오려면 DataSource의 getConnection() 대신 스프링 &lt;strong&gt;DataSourceUtils 클래스의 스태틱 메소드인 getConnection(DataSource) 를 사용해야 한다.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;JdbcTemplate의 내부 에서 트랜잭션 매니저로부터 현재 진행 중인 트랜잭션을 가져올 때 바로 이 메소 드를 사용한다. 대개는 JdbcTemplate을 이용해서 DAO를 작성하면 되기 때문에 DataSourceUtils . getConnection() 으로 Connection을 직접 가져와 사용할 일은 많지 않다.&lt;/p&gt;
+&lt;p&gt;JdbcTemplate의 내부 에서 트랜잭션 매니저로부터 현재 진행 중인 트랜잭션을 가져올 때 바로 이 메소 드를 사용한다. 대개는 JdbcTemplate을 이용해서 DAO를 작성하면 되기 때문에 DataSourceUtils.getConnection() 으로 Connection을 직접 가져와 사용할 일은 많지 않다.&lt;/p&gt;
 
 &lt;p&gt;JdbcTemplate을 사용할 수 없는 코드이거나 DAO 밖에서 현재 Connection을 가져와 참조해야 할 때만 주의해서 사용하자.
 JdbcTemplate을 사용하지 않는 레거시 DAO 코드를 스프링의 트랜잭션 매니저와 연동해서 동작하게 하려면 어떻게 해야 할까?&lt;/p&gt;
@@ -129,7 +412,7 @@ JdbcTemplate을 사용하지 않는 레거시 DAO 코드를 스프링의 트랜�
 &lt;ul&gt;
   &lt;li&gt;
     &lt;p&gt;첫 번째 방법은 레거시 DAO 코드의 Connection을 가져오는 코드를 모두 DataSourceUtils.getConnection() 으로 변경하는 것이다.
-두 번째 방법은 레거시 묘드가 DataSource 의 getConnection() 을 직접 호출해서 Connection을 가져오는 경우에 적용할 수 있다.&lt;/p&gt;
+두 번째 방법은 레거시 코드가 DataSource 의 getConnection() 을 직접 호출해서 Connection을 가져오는 경우에 적용할 수 있다.&lt;/p&gt;
 
     &lt;p&gt;리스트 2-44와 같이 DAO와 DataSource 사이에 TransactionAwareDataSourceProxy를 넣어서 레거시 DAO 코드에서 getConnection() 을 호출해도 매번 새로운 Connection 이 생성되지 않게 할수 있다.&lt;/p&gt;
 
@@ -162,14 +445,24 @@ JdbcTemplate을 사용하지 않는 레거시 DAO 코드를 스프링의 트랜�
 
 &lt;p&gt;리스트 2-45 JpaTransactionManager 설정&lt;/p&gt;
 
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;emf&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org .springframework.orm.jpa.JpaTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-      &lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;EntityManagerFactory&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;emf&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;..&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource2&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;..&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;memberDao1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...MemberDao&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;memberDao2&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...MemberDao&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource2&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...DataSourceTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource1&quot;&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;&amp;lt;/bean&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager2&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...DataSourceTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource2&quot;&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;&amp;lt;/bean&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;JpaTransactionManager 를 사용할 때는 lPA 의 persistence. xml 파일의&lt;persistence-unit&gt; 태그 내의 transaction-type을 JTA로 설정해두지 않도록 한다.&lt;/persistence-unit&gt;&lt;/p&gt;
+&lt;p&gt;JpaTransactionManager 를 사용할 때는 JPA 의 persistence. xml 파일의&lt;persistence-unit&gt; 태그 내의 transaction-type을 JTA로 설정해두지 않도록 한다.&lt;/persistence-unit&gt;&lt;/p&gt;
 
 &lt;p&gt;스프링이 제공하는 JpaTransactionManager를 사용할 것이므로 transactiontype 애트리뷰트는 생략한다.
 JpaTransactionManager 는 DataSourceTransactionManager 가 제공 하는 DataSource 레벨의 트랜잭션 관리 기능을 동시에 제공한다. 따라서 JpaTransactionManager를 사용하면서 동시에 트랜잭션이 적용된 JDBC DAO를 사용할수도있다.&lt;/p&gt;
@@ -187,14 +480,15 @@ JpaTransactionManager와 마찬가지로 DataSource 레벨의 트랜잭션 기�
 
 &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sessionFactory&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'transactionManager'&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'org .springframework.orm.hibernate3.HibernateTransactionManager'&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;sessionFactory.&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'sessionFactory'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;sessionFactory.&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'sessionFactory'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt; 
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
     &lt;p&gt;JmsTransactionManager, CciTransactionManager&lt;/p&gt;
 
-    &lt;p&gt;스프링은 DB뿐 아니라 트랜잭션이 지원되는 JMS 와 CCI를 위해서도 트랜잭션 매니 저를 제공한다. JMS와 CCI 에 대해서는 이 책에서 다루지 않는다. 관심이 있다면 스프링 레퍼런스 문서와 API 문서를 참고해보기 바란다.&lt;/p&gt;
+    &lt;p&gt;스프링은 DB뿐 아니라 트랜잭션이 지원되는 JMS 와 CCI를 위해서도 트랜잭션 매니저를 제공한다. JMS와 CCI 에 대해서는 이 책에서 다루지 않는다. 관심이 있다면 스프링 레퍼런스 문서와 API 문서를 참고해보기 바란다.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;JtaTransactionManager&lt;/p&gt;
@@ -205,21 +499,21 @@ JpaTransactionManager와 마찬가지로 DataSource 레벨의 트랜잭션 기�
 서버가 제공하는 JTA 트랜잭션 매니저를 스프링에서 이용히는 방법은 간단하다.
 디음과 같이 JtaTransactionManager를 등록해주기만 하면 된다.&lt;/p&gt;
 
-    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;' org .springframework .transaction . ita. JtaTransact ionManager'&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;&amp;lt;&lt;/span&gt;/bean)
+    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.springframework.transaction.jta.JtaTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;프로퍼티 설정 없이 JtaTransactionManager를 등록하면 디폴트로 등록된 JNDI 이름을 통해 서버의 TransactionManager와 UserTransaction을 찾는다.
-디폴트로 사용하는 UserTransaction 의 JNDI 이름은 j ava :comp/UserTransaction 이고 
+디폴트로 사용하는 UserTransaction 의 JNDI 이름은 java:comp/UserTransaction 이고 
 TransactionManager는 java :comp/TransactionManager,java :appserver / TransactionManager, java: pm / TransactionManager, java: / TransactionManager 네 가지다.
 만약 디폴트 이름과 다르게 서버에 설정되어 있다면 transactionManagerName과 userTransactionName 프로퍼티 를 통해 이름을 지정해주면 된다.
-JtaTransactionManager 를 사용할 때는 DataSource 도 서벼에 등록된 XA DataSource를 사용해야 한다.&lt;/p&gt;
+JtaTransactionManager 를 사용할 때는 DataSource 도 서버에 등록된 XA DataSource를 사용해야 한다.&lt;/p&gt;
 
 &lt;p&gt;JNDI를 이용해 서버의 XA DataSource를 다음과 같이 빈으로 등록하고 DAO 나 EntityManagerFactory, SessionFactory 등에서 사용 하게해야한다.&lt;/p&gt;
 
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;jee:jndi-lookup&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;jndi-name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;idbc/myXADataSource&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;jee:jndi-lookup&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;jndi-name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;jdbc/myXADataSource&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;DB 가 하나라면 트랜잭션 매니저 또한 하나만 등록돼야 한다. DB 가 여러 개라도 JTA를 이용해 글로벌 트랜잭션을 적용할 것이라면 JtaTransactionManager 하나만 등록돼야 한다. 
@@ -232,13 +526,21 @@ DAO는 어떤 식으로든 DataSource 빈과 연결되기 때문이다. 만약 �
 
 &lt;p&gt;리스트 2-47 두 개의 DB에 모두 사용되는 DAO 등록 방법&lt;/p&gt;
 
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(bean id=&quot;dataSorucel&quot; c1 ass=&quot; ... &quot;) . .. (/bean) (bean id=‘ dataSource2&quot; c1 ass=&quot; . .. γ .. (/bean)
-(bean id=&quot;memberDaol&quot; 이 c lass= ‘ ‘ . . MemberDao&quot;
-(properπty name=&quot;dataSource“ ref=&quot;dataSourcel&quot; /) (/bean)
-(bean id=&quot;memberDa02&quot; class=“ ... MemberDao&quot; ) (property name=&quot;dataSource“ ref=&quot;dataSource2&quot; /) (/bean)
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManagerl&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;뎌&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lass=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; ... DataSOlu 띠rceTra하 ansaction빼 1삐Ma히때 n1념ager ‘&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;〈φ따&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;pro때p야erty&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;n때&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;1녀&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;a히빼me&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;얀=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;딛.d매념&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;at혀aS야이&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;01따&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;uJr잊&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;e&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSourcel&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;’&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;transactionManagerl&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;“&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;•••&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;DataSourceTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-(property name=&quot;dataSource&quot; ref=&quot;dataSource2&quot; /&amp;gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;..&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource2&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;..&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;memberDao1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...MemberDao&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;memberDao2&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...MemberDao&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource2&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...DataSourceTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource1&quot;&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;&amp;lt;/bean&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;transactionManager2&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...DataSourceTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dataSource2&quot;&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;&amp;lt;/bean&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;262-트랜잭션-경계설정-전략&quot;&gt;2.6.2 트랜잭션 경계설정 전략&lt;/h2&gt;
@@ -261,7 +563,7 @@ DAO는 어떤 식으로든 DataSource 빈과 연결되기 때문이다. 만약 �
 
 &lt;p&gt;리스트 2-48 은 코드에 의해 관리되는 트랜잭션 을 적용한 예다.&lt;/p&gt;
 
-&lt;p&gt;MemberDao 는JDBC , iBatis , lPA , 하이벼네이트 중 어떤 것을 이용해도 된다. 또， 트랜잭션 매니저 빈도 DAO 에서 사용한 기술과 호환만 된다면 DataSourceTransactionManager, JpaTransactionManager, HibernateTransactionManager, JtaTransactionManager 중어떤 것을 사용해도 된다. 
+&lt;p&gt;MemberDao 는JDBC , iBatis , lPA , 하이버네이트 중 어떤 것을 이용해도 된다. 또， 트랜잭션 매니저 빈도 DAO 에서 사용한 기술과 호환만 된다면 DataSourceTransactionManager, JpaTransactionManager, HibernateTransactionManager, JtaTransactionManager 중어떤 것을 사용해도 된다. 
 &lt;strong&gt;스프링 의 트랜잭션 서비스 추상화와 동기화 기법 덕분에 기술에서 독립적인 트랜잭션 코드를 만들 수 있다.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;리스트 2-48 코드를 이용한 트랜잭션 경계설정 방법&lt;/p&gt;
@@ -299,7 +601,7 @@ TransactionDefinition 오브젝트를 만들어서 파라미터로 제공해주�
 
 &lt;p&gt;&lt;strong&gt;이때 트랜 잭션을 직접 코드에서 가져와 확인해보고 제어 해가면서 트랜잭션 적용 상태를 분석해 보면 어렵지 않게 문제의 원인을 찾을 수 있다.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;어디서든 Platform&lt;/strong&gt;TransactionManager 를 DI 받아서 getTransaction() 해보면 현재 진행 중인 트랜잭션을 확인할 수 있다.
+&lt;p&gt;&lt;strong&gt;어디서든 PlatformTransactionManager 를 DI 받아서 getTransaction() 해보면 현재 진행 중인 트랜잭션을 확인할 수 있다.&lt;/strong&gt;
 &lt;strong&gt;getTransaction() 이 돌려주는 TransactionStatus 오브젝트를 이용하면 현재 트랜잭션이 새로 시작된 것인지 기존 트랜잭션에 참여한 것인지 또는 트랜잭션이 종료된 것인지 확인할 수 있다.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;두 개의 DAO 또는 서비스 계층 코드가 같은 트랜잭션 안에서 동작 하고 있는지도 확인해볼 수 있다.&lt;/p&gt;
@@ -370,7 +672,8 @@ AOP 의 어드바이스가 적용되는 위치인 조인 포인트는 메소드 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MemberDaolmpl&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MemberDao&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;nc&quot;&gt;SimpleJdbclnsert&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 	&lt;span class=&quot;nc&quot;&gt;SimpleJdbcTemplate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jdbcTemplate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setDataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jdbcTemplate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SimpleJdbcTemplate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setDataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; 
+        &lt;span class=&quot;n&quot;&gt;jdbcTemplate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SimpleJdbcTemplate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 		&lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SimpleJdbclnsert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;withTableName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;member&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;	
 	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 	&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Member&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Member&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;members&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; 
@@ -378,7 +681,7 @@ AOP 의 어드바이스가 적용되는 위치인 조인 포인트는 메소드 
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;특별한 방법을 써서 인터페이스 없이 이 클래스에 직접 트랜잭션 AOP 를 적용했다고 해보자. 
+&lt;p&gt;&lt;strong&gt;특별한 방법을 써서 인터페이스 없이 이 클래스에 직접 트랜잭션 AOP 를 적용했다고 해보자.&lt;/strong&gt; 
 포인트컷에서는 *를 이용해 모든 메소드를 선정하게 했다. 문제는 add() , deleteAll() , count() 와 같은 트랜잭션이 필요한 메소드뿐 아니라 setDataSource() 처럼 트랜잭션과 전혀 상관없는 메소드도 포인트컷의 선정 대상에 들어간다는 점이다.&lt;/p&gt;
 
 &lt;p&gt;포인트컷 표현식은 이름 패턴을 이용해 대상을 선정하기 때문에 add() , deleteAll() , count() 는 포함시키고 setDataSource() 는 제외시키도록 표현 식을 만들 수 없다. 
@@ -416,8 +719,8 @@ AOP 의 어드바이스가 적용되는 위치인 조인 포인트는 메소드 
 
 ~~~xml
 &amp;lt;aop: config&amp;gt;
-    &amp;lt;aop :advisor advice-ref=&quot;txAdvice&quot; pointcut=&quot;execution( * * .. MemberDao. *(. . )) &quot; /&amp;gt; 
- &amp;lt;/aop :config&amp;gt;
+    &lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut=&quot;execution( * * .. MemberDao. *(. . )) &quot; /&gt; 
+ &amp;lt;/aop: config&amp;gt;
 ~~~
 
 AOP 설정 방법에 대한 자세한 내용은 5 장을 참고하자 .
@@ -475,7 +778,7 @@ MemberDao 인터페이스를 구현한 클래스로 선언된 빈은 인터페�
 
  클래스에 @Transactional 을 부여했을 때 트랜잭션이 적용되는 메소드는 프록시 방식과 인터페이스의 여부에 따라서 조금 달라진다.
  클래스의 @Transactional 은 인터페이스의 @Transactional 선언보다 우선한다. 
-따라서 @Transactional 을 적용하는 우선순위는 클래스의 메소드， 클래스， 인터페이스의 메소드， 인터페이스순이다.
+**따라서 @Transactional 을 적용하는 우선순위는 클래스의 메소드， 클래스， 인터페이스의 메소드， 인터페이스순이다.**
 MemberDao 의 메소드별 트랜잭션 속성을 생각해보자. 인터페이스 레벨에 부여된 @Transactional 은 디폴트 트랜잭션 속성을 갖는다. 따라서 읽기전용 속성은 false다. 이 속성은 모든 인터페이스의 메소드에 적용된다. 하지만 count() 메소드는 메소드 레벨의 @Transactional 애노테이션을 가졌고 읽기전용 속성이 true로 되어 었으 므로， 인터페이스 레벨의 선언보다 우선해서 적용된다. 따라서 count() 메소드만 읽기전용이고， 그 밖의 메소드는 트랜잭션이 적용되기는 하나 읽기와 쓰기가 모두 가능한 트랜잭션으로 설정된다.
 
 **@Transaction 적용 대상은 미리 결정하고 애플리케이션 안에서 통일하는 게 좋다.**
@@ -485,7 +788,7 @@ MemberDao 의 메소드별 트랜잭션 속성을 생각해보자. 인터페이�
 
 
 
-**트랜잭션 경계설정 방법 두 가지는 각기 장단점이 있다. aop와 tx 스키마의 태그를 이용하는 방식은 선언이 조금 복잡해 보이지만 코드에는 전혀 영향을 주지 않고 일괄적 으로 트랜잭션을 적용하거나 변경할 수 었다는 장점이 있다. @Transactional 을 일일이 대상 인터페이스나 클래스 메소드에 부여하는 건 상대적으로 번거로운 작업이다. 반면에 @Transactional 은 aop와 tx 스키마의 태그를 시용하는 경우보다 훨씬 세밀한 설정 이가능하다.**
+**트랜잭션 경계설정 방법 두 가지는 각기 장단점이 있다. aop와 tx 스키마의 태그를 이용하는 방식은 선언이 조금 복잡해 보이지만 코드에는 전혀 영향을 주지 않고 일괄적 으로 트랜잭션을 적용하거나 변경할 수 었다는 장점이 있다. @Transactional 을 일일이 대상 인터페이스나 클래스 메소드에 부여하는 건 상대적으로 번거로운 작업이다. 반면에 @Transactional 은 aop와 tx 스키마의 태그를 사용하는 경우보다 훨씬 세밀한 설정 이가능하다.**
 리스트 2-56은 get으로 시작하는 메소드에만 읽기전용 속성을 부여하고 나머지는 모두 디폴트 트랜잭션 속성을 사용하게 하는 트랜잭션 어드바이스 선언이다.
 
 
@@ -537,7 +840,7 @@ get 으로 시작 히는 모든 메소드에 일일이 @Transactional 을 부여
 ### 프록시 모드: 인터페이스와 클래스
 
 스프링의 AOP는 기본적으로 다이내믹 프록시 기법을 이용해 동작한다. 다이내믹 프록시를 적용하려변 인터페이스가 있어야 한다. 인터페이스의 사용은 DI 에서도 가장 기본 원칙인 만큼문제 될 것은 없다. 
-**하지만 특별한경우에 인터페이를구현하지 않은 클래스에 트랜잭션을 적용해야 할 수 있다.** 
+**하지만 특별한경우에 인터페이스 를구현하지 않은 클래스에 트랜잭션을 적용해야 할 수 있다.** 
 인터페이스가 없는 레거시 클래스 코드를 그대로 가져다가 사용히는데 수정은 불가능하고 대신 스프링의 트랜잭션의 경계설정 대상 으로 만들고 싶다면 어떻게 해야 할까?
 
 **이때는 스프링이 지원히는 클래스 프록시 모드를 사용하면 된다.** 
@@ -554,7 +857,7 @@ get 으로 시작 히는 모든 메소드에 일일이 @Transactional 을 부여
 
 ~~~xml
 &lt;aop:config proxy-target-class=&quot;true&quot;&gt;
-       &amp;lt;aop:pointcut id=&quot;txPointcut&quot; expression=execution( * * . . M emberDaolmpl. *(. . ))&quot; /&amp;gt;
+       &amp;lt;aop:pointcut id=&quot;txPointcut&quot; expression=execution( * * . . MemberDaolmpl. *(. . ))&quot; /&amp;gt;
 	&lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut-ref=&quot;txPointcut&quot; /&gt;
   &amp;lt;/aop:config/&amp;gt;
 ~~~
@@ -563,11 +866,11 @@ get 으로 시작 히는 모든 메소드에 일일이 @Transactional 을 부여
 
 
 
-- @Transact ional의 클래스 프록시 설정
+- @Transactional의 클래스 프록시 설정
 
-  @Transactional 을 사용하는 경우에도 다음과 같이 proxy-target -class 애트리뷰트를 true로 바꿔주변 된다.
+  @Transactional 을 사용하는 경우에도 다음과 같이 proxy-target-class 애트리뷰트를 true로 바꿔주변 된다.
 
-  &amp;lt;tx :annotation-dri ven proxy-target-class=&quot;true&quot; /&amp;gt;
+  &lt;tx:annotation-driven proxy-target-class=&quot;true&quot; /&gt;
 
   
 
@@ -576,7 +879,7 @@ get 으로 시작 히는 모든 메소드에 일일이 @Transactional 을 부여
   클래스 프록시는 일반적으로 인터페이스를 구현하지 않는 클래스에 주로 사용된다.
   하지만 원한다면 인터페이스가 있는 클래스에 클래스 프록시를 강제로 적용할 수도
 
-  있다. 이때는 반드시 클래스에 @Transactional 을 부여해줘야 한다. 인터페이스에 붙인 @Transactional 애노태이션은 구현 클래스로 그 정보가 전달되지 않는다. 따라서 인터페이스에만 @ Transactional 을 부여하고 클래스 프록시 모드로 바꾸면 트랜잭 션이적용되지않는다.
+  있다. 이때는 반드시 클래스에 @Transactional 을 부여해줘야 한다. 인터페이스에 붙인 @Transactional 애노태이션은 구현 클래스로 그 정보가 전달되지 않는다. 따라서 인터페이스에만 @Transactional 을 부여하고 클래스 프록시 모드로 바꾸면 트랜잭션이적용되지않는다.
 
   @Transactional 을 클래스에 부여하다고 해서 클래스 프록시가 적용되는 것은 아니다. **@Transactional 이 클래스에 있어도 타깃에 인터페이스가 있고 proxy-target-class 를 디폴트 값으로 그대로 뒀다면 인터페이스에 다이내믹 프록시가 적용되니 흔동하지 않도록 주의하자.**
 
@@ -589,10 +892,10 @@ get 으로 시작 히는 모든 메소드에 일일이 @Transactional 을 부여
 
   
 
-- 불필요한 메소드에 트랜잭션이 적용힐 수 있다
+- 불필요한 메소드에 트랜잭션이 적용할 수 있다
 
   클래스 프록시 방식을 사용하면 클래스의 모든 public 메소드에 트랜잭션이 적용된다. 
-  인터페이스를 이용히는 경우에는 인터페이스에 정의된 메소드로 트랜잭션 적용이 제한되지만클래스에는그런 구분을둘수 없다.
+  인터페이스를 이용히는 경우에는 인터페이스에 정의된 메소드로 트랜잭션 적용이 제한되지만 클래스에는그런 구분을 둘수 없다.
   
   **따라서 수정자 같은， 클라이언트가 사용하지는 않지만 public 으로 정의히는 메소드에도 트랜잭션이 적용되는 문제가 발생한다.** 
   물론 아무런 DB 작업이 없으므로 그냥 빈 트랜잭션이 시작됐다가 종료 되겠지만， 그만람 시간과 리소스에 낭비가 발생한다.
@@ -621,11 +924,11 @@ AspectJ AOP는 스프링과 달리 프록시를 타깃 오브젝트 앞에 두�
 AspectJ AOP는 그래서 매우 강력하다. 메소드 실행 지점만 조인 포인트로 사용할 수 있는 프록시 방식의 스프링 AOP 에서는 불가능한 다양한 조인 포인트와 고급 기능을 이용할 수있다. 
 대신 별도의 빌드 과정이나 바이트코드 조작을 위한 로드타임 위버 설정과 같은 부가적인작업이 필요하다.
 
-트랜잭션 AOP를 적용하기 위해 굳이 번거롭게 AspectJ를 사용할 펼요는 없다.
+트랜잭션 AOP를 적용하기 위해 굳이 번거롭게 AspectJ를 사용할 필요는 없다.
 AspectJ AOP를 스프링과 함께 애플리케이션 전반에 걸쳐서 사용하고 있는 경우라면 물론 고려해볼 수는 있다. 
 또는 다음과 같은 프록시 AOP 의 제약사항을 극복하기 위해 서라면 도입을 검토해볼 필요가 있다.
 
-Vo l. l 에서 자세히 살펴본 것처럼 프록시는 기능을 사용하려는 오브젝트인 클라이언 트와 서비스를 제공하는 오브젝트인 타깃 오브젝트 사이에 데코레이터 패턴을 써서 투명하게 추가된다. 투명하다는 건 프록시가 추가되더라도 클라이언트와 타깃 오브젝트의 코드를 수정할 필요도 없고 기본 기능에도 영향을 주지 않는다는 뜻이다. 그
+Vo l. l 에서 자세히 살펴본 것처럼 프록시는 기능을 사용하려는 오브젝트인 클라이언트와 서비스를 제공하는 오브젝트인 타깃 오브젝트 사이에 데코레이터 패턴을 써서 투명하게 추가된다. 투명하다는 건 프록시가 추가되더라도 클라이언트와 타깃 오브젝트의 코드를 수정할 필요도 없고 기본 기능에도 영향을 주지 않는다는 뜻이다. 
 
 그림 2-2 는 프록시가 적용되기 전과 후를 보여주고 있다. 프록시는 스프링 DI 의 도움을 받아서 클라이언트와 타깃 오브젝트 사이에 추가되고， 어드바이스가 제공해주는 부가적인 기능을 타깃 오브젝트의 메소드 호출 전후에 실행해준다.
 
@@ -638,9 +941,7 @@ Vo l. l 에서 자세히 살펴본 것처럼 프록시는 기능을 사용하려
 프록시가 적용되면 클라이언트는 프록시를 타깃 오브젝트라고 생각하고 프록시의 메소드를 호출한다. 프록시는 클라이언트로부터 요청을 받으면 타깃 오브젝트의 메소드로 위임해준다. 타깃 오브젝트에 위임히는 과정에서 부가작업을 추가할 수 있다. 
 트랜잭션 AOP 에 의해 추가된 프록시라면 타깃 오브젝트 메소드 호출 전에 트랜잭션을 시작하고 호출 후에 트랜잭션을 커밋하거나 롤백해줄 것이다.
 
-여기서 프록시는 클라이언트가 타깃 오므젝트
-
-를 호출하는 과정에서만 동작한다는 점을 주목하자. 
+여기서 프록시는 클라이언트가 타깃 오브젝를 를 호출하는 과정에서만 동작한다는 점을 주목하자. 
 **타깃 오브젝트의 메소드가 자기 자신의 다른 메 소드를 호출할 때 는 어떻게 될까? 이때 도 프록시가 동작할까? 그렇지 않다.**
 이미 프록시를 거쳐서 타깃 오브 젝트까지 작업 이 진행됐으므로 타깃 오브젝트에 서 자신의 메 소드를 호출할 때 는 프록 시를 거치지 않는다. 
 그림 2 -3 의 @은 클라이언트에서 프록시를 통해 들어온 호출이 다. 이때는 당연히 프록시의 기능이 동작한다. 하지만 @의 경우는 타깃 오브젝트 안에 서의 호출이 므로 프록시를 통하지 않고 직접 타깃 오브젝트의 메 소드로 호출이 일어 난다.
@@ -649,7 +950,7 @@ Vo l. l 에서 자세히 살펴본 것처럼 프록시는 기능을 사용하려
 
 리스트 2-5 9는 트랜잭션 AOP가 적용된 서 비 스 계층 클래스의 코드다. add () 메 소드는 트랜잭션 전파 속성이 항상 새로운 트랜잭션을 만들어 시작하도록 REQUIRES_NEW로 되어 있다. 
 
-따라서 다른 서비스 계층 오브젝트에서 트랜잭션이 시작된 후에 MemberService의 add () 메 소드가 호출되면 기존 트랜잭션은 잠시 중단되고 새로운 트랜잭션을 시작한다. MemberService 외의 오브젝트에 서 MemberS ervi c e 의 메 소드를 호출할 때는 항상 트랜잭션 프록시를 거쳐서 들어오기 때문에 메 소드에 설정해둔 트랜책션 속성이 정확히 적용된다.
+따라서 다른 서비스 계층 오브젝트에서 트랜잭션이 시작된 후에 MemberService의 add () 메 소드가 호출되면 기존 트랜잭션은 잠시 중단되고 새로운 트랜잭션을 시작한다. MemberService 외의 오브젝트에 서 MemberS ervi ce 의 메 소드를 호출할 때는 항상 트랜잭션 프록시를 거쳐서 들어오기 때문에 메 소드에 설정해둔 트랜책션 속성이 정확히 적용된다.
 
 
 
@@ -669,7 +970,7 @@ Vo l. l 에서 자세히 살펴본 것처럼 프록시는 기능을 사용하려
 
 complexWork() 은 클래스 레벨 @Transactional 의 적용을 받으므로 complexWork() 이 호출되기 전에 프록시에서 트랜잭션을 시작할 것이다. 
 
-**문제는 comp lexWork() 에서 add( )메소드를 호출할 때다.**
+**문제는 complexWork() 에서 add( )메소드를 호출할 때다.**
 
 - 이때는 프록시를 지나서 이미 MemberService 빈의 오브젝트로 들어왔으므로 트랜잭션 프록시를 다시 거치지 않고 add () 메소드가 바로 실행된다.
 - 그래서 이때는 add( ) 메소드의 트랜잭션 속성이 반영되지 못한다. add() 를 호출했음에도 새로운 트랜잭션이 생성되는 대신 complexWork() 에서 시작된 트랜잭션에 그냥 참여하게 될 뿐이다. 
@@ -709,7 +1010,7 @@ Aspec tJ를 시용해 트랜잭션을 적용할 때는 앞에서 설명한 것�
 
 모든 트랜잭션이 같은 방식으로 동작히는 건 아니다. 
 전체가 같이 실패하거나 성공히는 하나의 작업으로 묶인다면 점에서는 다를 바 없겠지만， 세밀히 따져보면 몇 가지 차이점이 있다. 
-스프링은 트랜잭션의 경계를 설정할 때 네 가지 트랜잭션 속성을 지정할 수있다. 또, 선언적 트랜잭션에서는 롤백과 커멋의 기준을 변경하기 위해 두 가지 추가 속성을 지정할 수 있다. 선언적 트랜잭션 기준으로 보자면 모든 트랜잭션 경계는 여섯 가지 속성을갖고 있는셈이다.
+스프링은 트랜잭션의 경계를 설정할 때 네 가지 트랜잭션 속성을 지정할 수있다. 또, 선언적 트랜잭션에서는 롤백과 커밋의 기준을 변경하기 위해 두 가지 추가 속성을 지정할 수 있다. 선언적 트랜잭션 기준으로 보자면 모든 트랜잭션 경계는 여섯 가지 속성을갖고 있는셈이다.
 트랜잭션 속성의 지정은 tx/aop 스키마의 태그를 이용히눈 경우에는 리스트 2-60과 같이 &lt;tx:method&gt; 태그의 애트리뷰트로 지정할수 있다. &amp;lt;tx: method&amp;gt; 의 애트리뷰트는 메소드 이름 패턴을 담은 name 애트리뷰트를 제외하면 모두 디폴트 값이 정의되어 있으 므로생략가능하다.
 
 
@@ -831,7 +1132,7 @@ noRollbackFor= ... , noRollbackForClassName= ... )
 
 - READ COMMITTED
 
-  실제로 가장 많이 사용되는 격리수준이다. 물론 스프링에서는 DEFAULT로 설정해둬도 DB 의 기본 격리수준을 따라서 READ_COMMITTED로 동작히는 경우가 대부분이므로 명시적으로 설정하지 않기도 한다. **READ_UNCOMMITTED와 달리 다른 트랜잭션이 커빗하지 않은 정보는 읽을 수 없다.** **대신 하나의 트랜잭션이 읽은 로우를 다른 트랜잭션이 수정할 수 있다.** **이 때문에 처음 트랜잭션이 같은 로우를 다시 읽을 경우 다른 내용이 발견될수있다 .**
+  실제로 가장 많이 사용되는 격리수준이다. 물론 스프링에서는 DEFAULT로 설정해둬도 DB 의 기본 격리수준을 따라서 READ_COMMITTED로 동작히는 경우가 대부분이므로 명시적으로 설정하지 않기도 한다. **READ_UNCOMMITTED와 달리 다른 트랜잭션이 커밋하지 않은 정보는 읽을 수 없다.** **대신 하나의 트랜잭션이 읽은 로우를 다른 트랜잭션이 수정할 수 있다.** **이 때문에 처음 트랜잭션이 같은 로우를 다시 읽을 경우 다른 내용이 발견될수있다 .**
 
   
 
@@ -1073,7 +1374,7 @@ public void add(Member m) {
 또， JPA나 하이버네이트에서는 persist() 나 merge( )를 명시적으로 호출하지 않아도 DB 에서 가져온 엔티티 오브젝트는 필드를 수정하는 것만으로도 UPDATE 가 일어나는 수정이 된다는 문제가 있다. 
 
 이런 경우에도 의도 적으로 flush() 를 수행해줘야 한다. 따라서 코드가 지저분해질 뿐만 아니라， DAO의 시용 기술을 의식해서 서비스 계층의 코드를 만들어야 한다는 문제점도 있다.
-**또 다른 접근 방법은 lDBC 의 DAO 가 호출될 때 lPA 나 하이버네이트의 캐시를 flush( ) 하도록 만들어주는 것이다.** 
+**또 다른 접근 방법은 JDBC 의 DAO 가 호출될 때 JPA 나 하이버네이트의 캐시를 flush( ) 하도록 만들어주는 것이다.** 
 
 AOP를 이용하면 lPA/하이버네이트 캐시의 flush( )를 호출해주는 부가기능을 JDBC DAO 에 간단히 추가해줄 수 있다. 이렇게 해두면 **JDBC DAO를 시용하지 않고 JPA DAO만 이용하는 경우에는 jPA 캐시를 효과 적으로 활용할 수 있고， JDBC DAO를 함께 사용할 때도 데이터의 정확성을 보장해줄 수있다.**
 
@@ -1085,7 +1386,7 @@ AOP를 이용하면 lPA/하이버네이트 캐시의 flush( )를 호출해주는
 
 한 개 이상의 DB 나 JMS 의 작업을 하나의 트랜잭션 안에서 동작하게 하려면 서버가 제공히는 트랜잭션 매니저를 JTA를 통해 사용해야 한다. 
 스프링에서는 서버에 설정해둔 XA DataSource와 트랜잭션 매니저 그리고 UserTransaction 등을 JNDI를 통해 가져와 모든 데이터 액세스 기술에서 사용할 수 있다. 
-JTA와 분산/글로벌 트랜잭션을 사용하기 위한 설정은 자바서버마다 다르므로 해당 서벼의 매뉴얼을 참고해서 등록하는 방법을 알아둬야한다.
+JTA와 분산/글로벌 트랜잭션을 사용하기 위한 설정은 자바서버마다 다르므로 해당 서버의 매뉴얼을 참고해서 등록하는 방법을 알아둬야한다.
 
 리스트 2-66 JTA를 적용한 설정
 
@@ -1099,6 +1400,8 @@ JTA와 분산/글로벌 트랜잭션을 사용하기 위한 설정은 자바서�
 	&lt;bean id=&quot;usageDao&quot; 뎌=&quot;&quot; c=&quot;&quot; lass=&quot; ....UsageDao.. &quot;&gt;
 		&lt;property name=&quot;dataSource&quot; ref=&quot;dataSource2&quot; /&gt; 
 	&lt;/bean&gt;
+
+
 &lt;bean id=&quot;txManager&quot; class=&quot;org. springframework.transaction.jta.JtaTransactionManager&quot; /&gt;
 ~~~
 
@@ -1165,7 +1468,7 @@ Atomikos 의 TransactionalEssentials를 스프링에 적용한 예를 살펴보�
 
 리스트 2-58JTATransactionManager 등록
 
-~~~
+~~~xml
 &amp;lt;bean id=“transactionManager&quot; class=&quot;org. springframework. transaction. j ta. JtaTransactionManager&quot;&amp;gt; &lt;property name=&quot;transactionManager&quot; ref=&quot;atomikosTransactionManager&quot; /&gt; &lt;property name=&quot;userTransaction&quot; ref=&quot;atomikosUserTransaction&quot; /&gt; &amp;lt;/bean&amp;gt;
 ~~~
 

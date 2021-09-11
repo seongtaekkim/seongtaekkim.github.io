@@ -1,0 +1,148 @@
+<h1 id="sringframework---bean">SringFramework - Bean</h1>
+
+<h2 id="빈-조회">빈 조회</h2>
+
+<ul>
+  <li>빈 메타정보 확인</li>
+  <li>빈 조회</li>
+</ul>
+
+<h2 id="싱글톤">싱글톤</h2>
+
+<ul>
+  <li>싱글톤 기본예제</li>
+  <li>Scope : 싱글톤, 프로토타입 예제</li>
+  <li>싱글톤 stateless</li>
+  <li>싱글톤과 configuration</li>
+</ul>
+
+<h2 id="빈-생성">빈 생성</h2>
+
+<h3 id="beanutils">BeanUtils</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">instantiateClass</span><span class="o">(</span><span class="nc">Constructor</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">ctor</span><span class="o">,</span> <span class="nc">Object</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> 
+</code></pre></div></div>
+
+<ul>
+  <li>빈 객체 생성</li>
+</ul>
+
+<h3 id="simpleinstantiationstrategy">SimpleInstantiationStrategy</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">Object</span> <span class="nf">instantiate</span><span class="o">(</span><span class="nc">RootBeanDefinition</span> <span class="n">bd</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="nc">BeanFactory</span> <span class="n">owner</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="abstractautowirecapablebeanfactory">AbstractAutowireCapableBeanFactory</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="nc">BeanWrapper</span> <span class="nf">instantiateBean</span><span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="nc">RootBeanDefinition</span> <span class="n">mbd</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="nc">BeanWrapper</span> <span class="nf">createBeanInstance</span><span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="nc">RootBeanDefinition</span> <span class="n">mbd</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> 
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="nc">Object</span> <span class="nf">doCreateBean</span><span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="nc">RootBeanDefinition</span> <span class="n">mbd</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="nc">Object</span> <span class="nf">createBean</span><span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="nc">RootBeanDefinition</span> <span class="n">mbd</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="abstractbeanfactory">AbstractBeanFactory</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">doGetBean</span><span class="o">(</span>
+      <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Class</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">requiredType</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">typeCheckOnly</span><span class="o">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>싱글톤 객체가 존재하는지 체크 (getSingleton)</li>
+  <li>scope가 싱글톤인지 프로토타입인지에 따라 생성방법이 분기처리됨. ( isSingleton )</li>
+</ul>
+
+<h3 id="abstractbeanfactory-1">AbstractBeanFactory</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">Object</span> <span class="nf">getBean</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="abstractautowirecapablebeanfactory-1">AbstractAutowireCapableBeanFactory</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">preInstantiateSingletons</span><span class="o">()</span>
+</code></pre></div></div>
+
+<p>​</p>
+
+<h3 id="abstractapplicationcontext">AbstractApplicationContext</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">finishBeanFactoryInitialization</span><span class="o">(</span><span class="nc">ConfigurableListableBeanFactory</span> <span class="n">beanFactory</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="o">()</span> 
+</code></pre></div></div>
+
+<ul>
+  <li>실제 빈을 생성하는 함수.</li>
+</ul>
+
+<h3 id="annotationconfigapplicationcontext">AnnotationConfigApplicationContext</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nf">AnnotationConfigApplicationContext</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;...</span> <span class="n">componentClasses</span><span class="o">)</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<h3 id="beandefinitiontest">BeanDefinitionTest</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">AnnotationConfigApplicationContext</span> <span class="n">ac</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AnnotationConfigApplicationContext</span><span class="o">(</span><span class="nc">AppConfig</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Configuration java에서 ApplicationContext를 생성</li>
+</ul>
+
+<h2 id="목차">목차</h2>
+
+<ul>
+  <li>spring bean 라이프사이클</li>
+</ul>
+
+<p>https://yangbongsoo.gitbook.io/study/spring-1/basic</p>
+
+<p>https://jaimemin.tistory.com/1787</p>
+
+<p>https://jaehoney.tistory.com/25</p>
+
+<p>https://cantcoding.tistory.com/47</p>
+
+<p>@Component</p>
+
+<p>- 개발자가 직접 작성한 클래스를 bean 등록하고자 할 경우 사용</p>
+
+<p>@Configuration + @Bean</p>
+
+<p>- 외부라이브러 또는 내장 클래스를 bean으로 등록하고자 할 경우 사용.</p>
+
+<p>- 1개 이상의 @Bean을 제공하는 클래스의 경우 반드시 @Configuraton을 명시</p>
+
+<p>http://wonwoo.ml/index.php/post/1701</p>
+
+<p>https://castleone.tistory.com/2</p>
+
+<p>7장까지 끌어갈 주제를 생각</p>
+
+<p>싱글톤</p>
+
+<p>https://webdevtechblog.com/%EC%8B%B1%EA%B8%80%ED%84%B4-%ED%8C%A8%ED%84%B4-singleton-pattern-db75ed29c36</p>
+
+<p>https://okky.kr/article/563392</p>
+
+<p>http://ldg.pe.kr/framework_reference/spring/ver1.2.2/html/beans.html#beans-factory-modes</p>
+
+<p>https://jwdeveloper.tistory.com/189?category=823920</p>
+
+<p>스프링 코어 관련</p>
+
+<p>https://jhhan009.tistory.com/66?category=761889</p>
+
+<h3 id="빈-생성-방식---cglib">빈 생성 방식 - CGLIB</h3>
+
+<ul>
+  <li>@Configuration 생성 방식을 찾아보자</li>
+  <li></li>
+</ul>
+

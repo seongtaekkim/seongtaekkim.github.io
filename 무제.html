@@ -1,0 +1,29 @@
+
+<p><img src="https://blog.kakaocdn.net/dn/IF6bS/btqUf0E2t2i/J15esYDvaNqr7IC16jDIB1/img.png" alt="img" /></p>
+
+<h3 id="-----applicationcontext">**  |   ApplicationContext**</h3>
+
+<ul>
+  <li>최상위 컨텍스트 입니다.</li>
+  <li>root-context에 등록되는 빈들은 모든 컨텍스트에서 사용할 수 있습니다. (공유 가능)</li>
+  <li>service나 dao를 포함한, 웹 환경에 독립적인 빈들을 담아둡니다.</li>
+  <li>서로 다른 servlet-context에서 공유해야 하는 빈들을 등록해놓고 사용할 수 있습니다.</li>
+  <li><strong>servlet-context 내 빈들은 이용이 불가능합니다.</strong></li>
+</ul>
+
+<h3 id="ㅣ-webapplicationcontext"><strong>ㅣ WebApplicationContext</strong></h3>
+
+<ul>
+  <li>servlet-context에 등록되는 빈들은 해당 컨테스트에서만 사용할 수 있습니다.</li>
+  <li>DispatcherServlet이 직접 사용하는 컨트롤러를 포함한 웹 관련 빈을 등록하는 데 사용합니다.</li>
+  <li><strong>독자적인 컨텍스트들을 가지며, root-context 내 빈 사용이 가능합니다.</strong></li>
+</ul>
+
+<p><img src="https://changrea.io/static/970a94db150e798fc4d860072f8a5830/fcda8/spring-security-authorization.png" alt="spring security authorization" /></p>
+
+<p><img src="https://t1.daumcdn.net/cfile/tistory/9983FB455BB4E5D30C" alt="img" /></p>
+
+<p>인프런 (<strong>더 자바, 코드를 조작하는 다양한 방법</strong>) - 백기선</p>
+
+<p>https://www.inflearn.com/course/the-java-code-manipulation#curriculum</p>
+
