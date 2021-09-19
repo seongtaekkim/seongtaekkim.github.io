@@ -8,6 +8,38 @@
     
       
       <item>
+        <title>JAVA CORE - JVM</title>
+        
+          <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– JAVA CORE –&lt;/span&gt;&lt;/p&gt;
+&lt;ul class=&quot;table-of-contents-list&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;./java-jvm&quot;&gt;JAVA CORE - JVM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Sat, 18 Sep 2021 09:40:00 +0900</pubDate>
+        <link>
+        https://seongtaekkim.github.io/java-jvm</link>
+        <guid isPermaLink="true">https://seongtaekkim.github.io/java-jvm</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Springframework Bean(1)</title>
+        
+          <description>
+</description>
+        
+        <pubDate>Sat, 18 Sep 2021 00:00:00 +0900</pubDate>
+        <link>
+        https://seongtaekkim.github.io/springframework-bean(1)</link>
+        <guid isPermaLink="true">https://seongtaekkim.github.io/springframework-bean(1)</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>스프링 따라하기</title>
         
           <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
@@ -133,44 +165,6 @@
         <link>
         https://seongtaekkim.github.io/spring-toby1_9-summary</link>
         <guid isPermaLink="true">https://seongtaekkim.github.io/spring-toby1_9-summary</guid>
-      </item>
-      
-    
-      
-      <item>
-        <title>java 강좌(1) - Python 두번째 강의</title>
-        
-          <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;Python 강좌는 여러 절로 구성되어 있습니다. &lt;/span&gt;&lt;/p&gt;
-&lt;ul class=&quot;table-of-contents-list&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-basic&quot;&gt;java 강좌(1) - java 기본&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-advanced&quot;&gt;java 강좌(2) java  제어문&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        
-        <pubDate>Fri, 28 Sep 2018 01:40:00 +0900</pubDate>
-        <link>
-        https://seongtaekkim.github.io/java-advanced</link>
-        <guid isPermaLink="true">https://seongtaekkim.github.io/java-advanced</guid>
-      </item>
-      
-    
-      
-      <item>
-        <title>java 강좌(1) - Python 기본</title>
-        
-          <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;Python 강좌는 여러 절로 구성되어 있습니다. &lt;/span&gt;&lt;/p&gt;
-&lt;ul class=&quot;table-of-contents-list&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-basic&quot;&gt;java 강좌(1) - java 기본&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-advanced&quot;&gt;java 강좌(2) java  제어문&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        
-        <pubDate>Fri, 28 Sep 2018 01:40:00 +0900</pubDate>
-        <link>
-        https://seongtaekkim.github.io/java-basic</link>
-        <guid isPermaLink="true">https://seongtaekkim.github.io/java-basic</guid>
       </item>
       
     

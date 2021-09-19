@@ -1,0 +1,624 @@
+
+<h1 id="springframework---bean-생성원리-분석1">SpringFramework - bean 생성원리 분석(1)</h1>
+
+<h3 id="개요">개요</h3>
+
+<p>SpringFramework의 <code class="language-plaintext highlighter-rouge">AnnotationConfigApplicationContext  </code>생성을 통한 빈 등록 및  빈 생성 절차를 알아보자.</p>
+
+<h4 id="springtestapplicationjava">SpringTestApplication.java</h4>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AnnotationConfigApplicationContext</span><span class="o">(</span><span class="nc">AppConfig</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="nc">String</span><span class="o">[]</span> <span class="n">beanNames</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBeanDefinitionNames</span><span class="o">();</span>
+<span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">name</span> <span class="o">:</span> <span class="n">beanNames</span><span class="o">)</span> <span class="o">{</span>
+   <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>@Configuration을 정의한 AppConfig.java를 이용해서 <code class="language-plaintext highlighter-rouge">AnnotationConfigApplicationContext</code> 를 생성한다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">AnnotationConfigApplicationContext</code> 를 생성할 때 빈이 등록,생성되는데 디버깅을 통해 대략적인 순서를 알아보았다.</p>
+  </li>
+</ul>
+
+<h4 id="annotationconfigapplicationcontextjava">AnnotationConfigApplicationContext.java</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public AnnotationConfigApplicationContext(Class&lt;?&gt;... componentClasses) {
+   this();
+   register(componentClasses);
+   refresh();
+}
+</code></pre></div></div>
+
+<ul>
+  <li>생성자 코드 중에 <code class="language-plaintext highlighter-rouge">register</code>메서드는  빈 등록, <code class="language-plaintext highlighter-rouge">refresh</code> 메서드는 빈 생성을 담당한다.</li>
+</ul>
+
+<h3 id="1-register-메서드---빈-등록">1. register 메서드 - 빈 등록</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Override
+public void register(Class&lt;?&gt;... componentClasses) {
+   Assert.notEmpty(componentClasses, "At least one component class must be specified");
+   StartupStep registerComponentClass = this.getApplicationStartup().start("spring.context.component-classes.register")
+         .tag("classes", () -&gt; Arrays.toString(componentClasses));
+   this.reader.register(componentClasses);
+   registerComponentClass.end();
+}
+</code></pre></div></div>
+
+<ul>
+  <li>this.reader.register(componentClasses); 메서드로 이동하면 , <code class="language-plaintext highlighter-rouge">AnnotatedBeanDefinitionReader</code>클래스로 이동한다.</li>
+</ul>
+
+<h4 id="annotatedbeandefinitionreaderjava">AnnotatedBeanDefinitionReader.java</h4>
+
+<ul>
+  <li>상단 주석을 보면, Register a bean from the given bean class, deriving its metadata from class-declared annotations. 이라는 표현이 있다.  프로그래머가 annotation으로 정의한 빈을 등록하는 곳 같다.</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="nf">doRegisterBean</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">beanClass</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span>
+      <span class="nd">@Nullable</span> <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">Annotation</span><span class="o">&gt;[]</span> <span class="n">qualifiers</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Supplier</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">supplier</span><span class="o">,</span>
+      <span class="nd">@Nullable</span> <span class="nc">BeanDefinitionCustomizer</span><span class="o">[]</span> <span class="n">customizers</span><span class="o">)</span> <span class="o">{</span>
+
+   <span class="nc">AnnotatedGenericBeanDefinition</span> <span class="n">abd</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AnnotatedGenericBeanDefinition</span><span class="o">(</span><span class="n">beanClass</span><span class="o">);</span>
+   <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">conditionEvaluator</span><span class="o">.</span><span class="na">shouldSkip</span><span class="o">(</span><span class="n">abd</span><span class="o">.</span><span class="na">getMetadata</span><span class="o">()))</span> <span class="o">{</span>
+      <span class="k">return</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="n">abd</span><span class="o">.</span><span class="na">setInstanceSupplier</span><span class="o">(</span><span class="n">supplier</span><span class="o">);</span>
+   <span class="nc">ScopeMetadata</span> <span class="n">scopeMetadata</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">scopeMetadataResolver</span><span class="o">.</span><span class="na">resolveScopeMetadata</span><span class="o">(</span><span class="n">abd</span><span class="o">);</span>
+   <span class="n">abd</span><span class="o">.</span><span class="na">setScope</span><span class="o">(</span><span class="n">scopeMetadata</span><span class="o">.</span><span class="na">getScopeName</span><span class="o">());</span>
+   <span class="nc">String</span> <span class="n">beanName</span> <span class="o">=</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">name</span> <span class="o">:</span> <span class="k">this</span><span class="o">.</span><span class="na">beanNameGenerator</span><span class="o">.</span><span class="na">generateBeanName</span><span class="o">(</span><span class="n">abd</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">registry</span><span class="o">));</span>
+
+   <span class="nc">AnnotationConfigUtils</span><span class="o">.</span><span class="na">processCommonDefinitionAnnotations</span><span class="o">(</span><span class="n">abd</span><span class="o">);</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">qualifiers</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">Annotation</span><span class="o">&gt;</span> <span class="n">qualifier</span> <span class="o">:</span> <span class="n">qualifiers</span><span class="o">)</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="nc">Primary</span><span class="o">.</span><span class="na">class</span> <span class="o">==</span> <span class="n">qualifier</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">abd</span><span class="o">.</span><span class="na">setPrimary</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="nc">Lazy</span><span class="o">.</span><span class="na">class</span> <span class="o">==</span> <span class="n">qualifier</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">abd</span><span class="o">.</span><span class="na">setLazyInit</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="o">{</span>
+            <span class="n">abd</span><span class="o">.</span><span class="na">addQualifier</span><span class="o">(</span><span class="k">new</span> <span class="nc">AutowireCandidateQualifier</span><span class="o">(</span><span class="n">qualifier</span><span class="o">));</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">customizers</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">BeanDefinitionCustomizer</span> <span class="n">customizer</span> <span class="o">:</span> <span class="n">customizers</span><span class="o">)</span> <span class="o">{</span>
+         <span class="n">customizer</span><span class="o">.</span><span class="na">customize</span><span class="o">(</span><span class="n">abd</span><span class="o">);</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+
+   <span class="nc">BeanDefinitionHolder</span> <span class="n">definitionHolder</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BeanDefinitionHolder</span><span class="o">(</span><span class="n">abd</span><span class="o">,</span> <span class="n">beanName</span><span class="o">);</span>
+   <span class="n">definitionHolder</span> <span class="o">=</span> <span class="nc">AnnotationConfigUtils</span><span class="o">.</span><span class="na">applyScopedProxyMode</span><span class="o">(</span><span class="n">scopeMetadata</span><span class="o">,</span> <span class="n">definitionHolder</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">registry</span><span class="o">);</span>
+   <span class="nc">BeanDefinitionReaderUtils</span><span class="o">.</span><span class="na">registerBeanDefinition</span><span class="o">(</span><span class="n">definitionHolder</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">registry</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>마지막 줄의 <code class="language-plaintext highlighter-rouge">BeanDefinitionReaderUtils</code> 클래스의 <code class="language-plaintext highlighter-rouge">registerBeanDefinition</code> 메서드를 통해 빈이 등록된다.</li>
+  <li></li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AnnotatedGenericBeanDefinition
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ScopeMetadata
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BeanDefinitionHolder
+</code></pre></div></div>
+
+<h4 id="genericapplicationcontextjava">GenericApplicationContext.java</h4>
+
+<ul>
+  <li>주석에 <code class="language-plaintext highlighter-rouge">BeanDefinitionRegistry</code> 의 구현체라고 되어있다.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//---------------------------------------------------------------------
+// Implementation of BeanDefinitionRegistry
+//---------------------------------------------------------------------
+
+@Override
+public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+      throws BeanDefinitionStoreException {
+
+   this.beanFactory.registerBeanDefinition(beanName, beanDefinition);
+}
+</code></pre></div></div>
+
+<ul>
+  <li>this.beanFactory는 <code class="language-plaintext highlighter-rouge">DefaultListableBeanFactory</code> 타입의 상수객체이다.
+    <ul>
+      <li>private final DefaultListableBeanFactory beanFactory;</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="defaultlistablebeanfactoryjava">DefaultListableBeanFactory.java</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">DefaultListableBeanFactory</code> 클래스는 bean을 등록,조회하는 역할을 한다. (등록된 빈도 정의되어 있다.)
+    <ul>
+      <li>빈 등록 객체 : Map&lt;String, BeanDefinition&gt; beanDefinitionMap</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//---------------------------------------------------------------------</span>
+<span class="c1">// Implementation of BeanDefinitionRegistry interface</span>
+<span class="c1">//---------------------------------------------------------------------</span>
+
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerBeanDefinition</span><span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="nc">BeanDefinition</span> <span class="n">beanDefinition</span><span class="o">)</span>
+      <span class="kd">throws</span> <span class="nc">BeanDefinitionStoreException</span> <span class="o">{</span>
+
+   <span class="nc">Assert</span><span class="o">.</span><span class="na">hasText</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="s">"Bean name must not be empty"</span><span class="o">);</span>
+   <span class="nc">Assert</span><span class="o">.</span><span class="na">notNull</span><span class="o">(</span><span class="n">beanDefinition</span><span class="o">,</span> <span class="s">"BeanDefinition must not be null"</span><span class="o">);</span>
+
+   <span class="k">if</span> <span class="o">(</span><span class="n">beanDefinition</span> <span class="k">instanceof</span> <span class="nc">AbstractBeanDefinition</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">try</span> <span class="o">{</span>
+         <span class="o">((</span><span class="nc">AbstractBeanDefinition</span><span class="o">)</span> <span class="n">beanDefinition</span><span class="o">).</span><span class="na">validate</span><span class="o">();</span>
+      <span class="o">}</span>
+      <span class="k">catch</span> <span class="o">(</span><span class="nc">BeanDefinitionValidationException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+         <span class="k">throw</span> <span class="k">new</span> <span class="nf">BeanDefinitionStoreException</span><span class="o">(</span><span class="n">beanDefinition</span><span class="o">.</span><span class="na">getResourceDescription</span><span class="o">(),</span> <span class="n">beanName</span><span class="o">,</span>
+               <span class="s">"Validation of bean definition failed"</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+
+   <span class="nc">BeanDefinition</span> <span class="n">existingDefinition</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">existingDefinition</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(!</span><span class="n">isAllowBeanDefinitionOverriding</span><span class="o">())</span> <span class="o">{</span>
+         <span class="k">throw</span> <span class="k">new</span> <span class="nf">BeanDefinitionOverrideException</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">beanDefinition</span><span class="o">,</span> <span class="n">existingDefinition</span><span class="o">);</span>
+      <span class="o">}</span>
+      <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">existingDefinition</span><span class="o">.</span><span class="na">getRole</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">beanDefinition</span><span class="o">.</span><span class="na">getRole</span><span class="o">())</span> <span class="o">{</span>
+         <span class="c1">// e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isInfoEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Overriding user-defined bean definition for bean '"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                  <span class="s">"' with a framework-generated bean definition: replacing ["</span> <span class="o">+</span>
+                  <span class="n">existingDefinition</span> <span class="o">+</span> <span class="s">"] with ["</span> <span class="o">+</span> <span class="n">beanDefinition</span> <span class="o">+</span> <span class="s">"]"</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">else</span> <span class="nf">if</span> <span class="o">(!</span><span class="n">beanDefinition</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">existingDefinition</span><span class="o">))</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">"Overriding bean definition for bean '"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                  <span class="s">"' with a different definition: replacing ["</span> <span class="o">+</span> <span class="n">existingDefinition</span> <span class="o">+</span>
+                  <span class="s">"] with ["</span> <span class="o">+</span> <span class="n">beanDefinition</span> <span class="o">+</span> <span class="s">"]"</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">else</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isTraceEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">trace</span><span class="o">(</span><span class="s">"Overriding bean definition for bean '"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                  <span class="s">"' with an equivalent definition: replacing ["</span> <span class="o">+</span> <span class="n">existingDefinition</span> <span class="o">+</span>
+                  <span class="s">"] with ["</span> <span class="o">+</span> <span class="n">beanDefinition</span> <span class="o">+</span> <span class="s">"]"</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">beanDefinition</span><span class="o">);</span>
+   <span class="o">}</span>
+   <span class="k">else</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">hasBeanCreationStarted</span><span class="o">())</span> <span class="o">{</span>
+         <span class="c1">// Cannot modify startup-time collection elements anymore (for stable iteration)</span>
+         <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">beanDefinition</span><span class="o">);</span>
+            <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">updatedDefinitions</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">updatedDefinitions</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">);</span>
+            <span class="n">updatedDefinitions</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span> <span class="o">=</span> <span class="n">updatedDefinitions</span><span class="o">;</span>
+            <span class="n">removeManualSingletonName</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">else</span> <span class="o">{</span>
+         <span class="c1">// Still in startup registration phase</span>
+         <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">beanDefinition</span><span class="o">);</span>
+         <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+         <span class="n">removeManualSingletonName</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+      <span class="o">}</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">frozenBeanDefinitionNames</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="k">if</span> <span class="o">(</span><span class="n">existingDefinition</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">containsSingleton</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">resetBeanDefinition</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+   <span class="o">}</span>
+   <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">isConfigurationFrozen</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">clearByTypeCache</span><span class="o">();</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);</p>
+  </li>
+  <li>
+    <p>빈이름이 등록되어있는지 조회하여 존재하지 않으면, 빈을 등록한다.</p>
+  </li>
+  <li>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">beanDefinition</span><span class="o">);</span>
+<span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="2-refresh-메서드---빈-생성">2. refresh 메서드 - 빈 생성</h3>
+
+<h4 id="abstractapplicationcontextjava">AbstractApplicationContext.java</h4>
+
+<ul>
+  <li>finishBeanFactoryInitialization(beanFactory) 메서드는 실제 빈을 생성하는 로직이다.</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">BeansException</span><span class="o">,</span> <span class="nc">IllegalStateException</span> <span class="o">{</span>
+   <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">startupShutdownMonitor</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nc">StartupStep</span> <span class="n">contextRefresh</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">applicationStartup</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="s">"spring.context.refresh"</span><span class="o">);</span>
+
+      <span class="c1">// Prepare this context for refreshing.</span>
+      <span class="n">prepareRefresh</span><span class="o">();</span>
+
+      <span class="c1">// Tell the subclass to refresh the internal bean factory.</span>
+      <span class="nc">ConfigurableListableBeanFactory</span> <span class="n">beanFactory</span> <span class="o">=</span> <span class="n">obtainFreshBeanFactory</span><span class="o">();</span>
+
+      <span class="c1">// Prepare the bean factory for use in this context.</span>
+      <span class="n">prepareBeanFactory</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+
+      <span class="k">try</span> <span class="o">{</span>
+         <span class="c1">// Allows post-processing of the bean factory in context subclasses.</span>
+         <span class="n">postProcessBeanFactory</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+
+         <span class="nc">StartupStep</span> <span class="n">beanPostProcess</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">applicationStartup</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="s">"spring.context.beans.post-process"</span><span class="o">);</span>
+         <span class="c1">// Invoke factory processors registered as beans in the context.</span>
+         <span class="n">invokeBeanFactoryPostProcessors</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+
+         <span class="c1">// Register bean processors that intercept bean creation.</span>
+         <span class="n">registerBeanPostProcessors</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+         <span class="n">beanPostProcess</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
+
+         <span class="c1">// Initialize message source for this context.</span>
+         <span class="n">initMessageSource</span><span class="o">();</span>
+
+         <span class="c1">// Initialize event multicaster for this context.</span>
+         <span class="n">initApplicationEventMulticaster</span><span class="o">();</span>
+
+         <span class="c1">// Initialize other special beans in specific context subclasses.</span>
+         <span class="n">onRefresh</span><span class="o">();</span>
+
+         <span class="c1">// Check for listener beans and register them.</span>
+         <span class="n">registerListeners</span><span class="o">();</span>
+
+         <span class="c1">// Instantiate all remaining (non-lazy-init) singletons.</span>
+         <span class="n">finishBeanFactoryInitialization</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+
+         <span class="c1">// Last step: publish corresponding event.</span>
+         <span class="n">finishRefresh</span><span class="o">();</span>
+      <span class="o">}</span>
+
+      <span class="k">catch</span> <span class="o">(</span><span class="nc">BeansException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isWarnEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Exception encountered during context initialization - "</span> <span class="o">+</span>
+                  <span class="s">"cancelling refresh attempt: "</span> <span class="o">+</span> <span class="n">ex</span><span class="o">);</span>
+         <span class="o">}</span>
+
+         <span class="c1">// Destroy already created singletons to avoid dangling resources.</span>
+         <span class="n">destroyBeans</span><span class="o">();</span>
+
+         <span class="c1">// Reset 'active' flag.</span>
+         <span class="n">cancelRefresh</span><span class="o">(</span><span class="n">ex</span><span class="o">);</span>
+
+         <span class="c1">// Propagate exception to caller.</span>
+         <span class="k">throw</span> <span class="n">ex</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="k">finally</span> <span class="o">{</span>
+         <span class="c1">// Reset common introspection caches in Spring's core, since we</span>
+         <span class="c1">// might not ever need metadata for singleton beans anymore...</span>
+         <span class="n">resetCommonCaches</span><span class="o">();</span>
+         <span class="n">contextRefresh</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="finishbeanfactoryinitialization-메서드">finishBeanFactoryInitialization 메서드</h4>
+
+<ul>
+  <li>주석 : Finish the initialization of this context’s bean factory<strong>, initializing all remaining singleton beans.</strong></li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">finishBeanFactoryInitialization</span><span class="o">(</span><span class="nc">ConfigurableListableBeanFactory</span> <span class="n">beanFactory</span><span class="o">)</span> <span class="o">{</span>
+   <span class="c1">// Initialize conversion service for this context.</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">beanFactory</span><span class="o">.</span><span class="na">containsBean</span><span class="o">(</span><span class="no">CONVERSION_SERVICE_BEAN_NAME</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
+         <span class="n">beanFactory</span><span class="o">.</span><span class="na">isTypeMatch</span><span class="o">(</span><span class="no">CONVERSION_SERVICE_BEAN_NAME</span><span class="o">,</span> <span class="nc">ConversionService</span><span class="o">.</span><span class="na">class</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">beanFactory</span><span class="o">.</span><span class="na">setConversionService</span><span class="o">(</span>
+            <span class="n">beanFactory</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="no">CONVERSION_SERVICE_BEAN_NAME</span><span class="o">,</span> <span class="nc">ConversionService</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+   <span class="o">}</span>
+
+   <span class="c1">// Register a default embedded value resolver if no BeanFactoryPostProcessor</span>
+   <span class="c1">// (such as a PropertySourcesPlaceholderConfigurer bean) registered any before:</span>
+   <span class="c1">// at this point, primarily for resolution in annotation attribute values.</span>
+   <span class="k">if</span> <span class="o">(!</span><span class="n">beanFactory</span><span class="o">.</span><span class="na">hasEmbeddedValueResolver</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">beanFactory</span><span class="o">.</span><span class="na">addEmbeddedValueResolver</span><span class="o">(</span><span class="n">strVal</span> <span class="o">-&gt;</span> <span class="n">getEnvironment</span><span class="o">().</span><span class="na">resolvePlaceholders</span><span class="o">(</span><span class="n">strVal</span><span class="o">));</span>
+   <span class="o">}</span>
+
+   <span class="c1">// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.</span>
+   <span class="nc">String</span><span class="o">[]</span> <span class="n">weaverAwareNames</span> <span class="o">=</span> <span class="n">beanFactory</span><span class="o">.</span><span class="na">getBeanNamesForType</span><span class="o">(</span><span class="nc">LoadTimeWeaverAware</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+   <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">weaverAwareName</span> <span class="o">:</span> <span class="n">weaverAwareNames</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">getBean</span><span class="o">(</span><span class="n">weaverAwareName</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="c1">// Stop using the temporary ClassLoader for type matching.</span>
+   <span class="n">beanFactory</span><span class="o">.</span><span class="na">setTempClassLoader</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+
+   <span class="c1">// Allow for caching all bean definition metadata, not expecting further changes.</span>
+   <span class="n">beanFactory</span><span class="o">.</span><span class="na">freezeConfiguration</span><span class="o">();</span>
+
+   <span class="c1">// Instantiate all remaining (non-lazy-init) singletons.</span>
+   <span class="n">beanFactory</span><span class="o">.</span><span class="na">preInstantiateSingletons</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>beanFactory.preInstantiateSingletons(); 메서드에서 싱글톤 객체를 생성한다.</li>
+</ul>
+
+<h4 id="defaultlistablebeanfactoryjava-1">DefaultListableBeanFactory.java</h4>
+
+<ul>
+  <li>1번의 register메서드에서 등록한 this.beanDefinitionNames를 대상으로 빈 생성을 수행한다.</li>
+  <li>isFactoryBean(beanName) 가 false이므로 getBean(beanName); 메서드를 수행한다.</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">preInstantiateSingletons</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">BeansException</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isTraceEnabled</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">logger</span><span class="o">.</span><span class="na">trace</span><span class="o">(</span><span class="s">"Pre-instantiating singletons in "</span> <span class="o">+</span> <span class="k">this</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="c1">// Iterate over a copy to allow for init methods which in turn register new bean definitions.</span>
+   <span class="c1">// While this may not be part of the regular factory bootstrap, it does otherwise work fine.</span>
+   <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">beanNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">);</span>
+
+   <span class="c1">// Trigger initialization of all non-lazy singleton beans...</span>
+   <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span> <span class="o">:</span> <span class="n">beanNames</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nc">RootBeanDefinition</span> <span class="n">bd</span> <span class="o">=</span> <span class="n">getMergedLocalBeanDefinition</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(!</span><span class="n">bd</span><span class="o">.</span><span class="na">isAbstract</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">bd</span><span class="o">.</span><span class="na">isSingleton</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">bd</span><span class="o">.</span><span class="na">isLazyInit</span><span class="o">())</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">isFactoryBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">Object</span> <span class="n">bean</span> <span class="o">=</span> <span class="n">getBean</span><span class="o">(</span><span class="no">FACTORY_BEAN_PREFIX</span> <span class="o">+</span> <span class="n">beanName</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">bean</span> <span class="k">instanceof</span> <span class="nc">FactoryBean</span><span class="o">)</span> <span class="o">{</span>
+               <span class="nc">FactoryBean</span><span class="o">&lt;?&gt;</span> <span class="n">factory</span> <span class="o">=</span> <span class="o">(</span><span class="nc">FactoryBean</span><span class="o">&lt;?&gt;)</span> <span class="n">bean</span><span class="o">;</span>
+               <span class="kt">boolean</span> <span class="n">isEagerInit</span><span class="o">;</span>
+               <span class="k">if</span> <span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">factory</span> <span class="k">instanceof</span> <span class="nc">SmartFactoryBean</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">isEagerInit</span> <span class="o">=</span> <span class="nc">AccessController</span><span class="o">.</span><span class="na">doPrivileged</span><span class="o">(</span>
+                        <span class="o">(</span><span class="nc">PrivilegedAction</span><span class="o">&lt;</span><span class="nc">Boolean</span><span class="o">&gt;)</span> <span class="o">((</span><span class="nc">SmartFactoryBean</span><span class="o">&lt;?&gt;)</span> <span class="n">factory</span><span class="o">)::</span><span class="n">isEagerInit</span><span class="o">,</span>
+                        <span class="n">getAccessControlContext</span><span class="o">());</span>
+               <span class="o">}</span>
+               <span class="k">else</span> <span class="o">{</span>
+                  <span class="n">isEagerInit</span> <span class="o">=</span> <span class="o">(</span><span class="n">factory</span> <span class="k">instanceof</span> <span class="nc">SmartFactoryBean</span> <span class="o">&amp;&amp;</span>
+                        <span class="o">((</span><span class="nc">SmartFactoryBean</span><span class="o">&lt;?&gt;)</span> <span class="n">factory</span><span class="o">).</span><span class="na">isEagerInit</span><span class="o">());</span>
+               <span class="o">}</span>
+               <span class="k">if</span> <span class="o">(</span><span class="n">isEagerInit</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">getBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+               <span class="o">}</span>
+            <span class="o">}</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="o">{</span>
+            <span class="n">getBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+
+   <span class="c1">// Trigger post-initialization callback for all applicable beans...</span>
+   <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">beanName</span> <span class="o">:</span> <span class="n">beanNames</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nc">Object</span> <span class="n">singletonInstance</span> <span class="o">=</span> <span class="n">getSingleton</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">singletonInstance</span> <span class="k">instanceof</span> <span class="nc">SmartInitializingSingleton</span><span class="o">)</span> <span class="o">{</span>
+         <span class="nc">StartupStep</span> <span class="n">smartInitialize</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getApplicationStartup</span><span class="o">().</span><span class="na">start</span><span class="o">(</span><span class="s">"spring.beans.smart-initialize"</span><span class="o">)</span>
+               <span class="o">.</span><span class="na">tag</span><span class="o">(</span><span class="s">"beanName"</span><span class="o">,</span> <span class="n">beanName</span><span class="o">);</span>
+         <span class="nc">SmartInitializingSingleton</span> <span class="n">smartSingleton</span> <span class="o">=</span> <span class="o">(</span><span class="nc">SmartInitializingSingleton</span><span class="o">)</span> <span class="n">singletonInstance</span><span class="o">;</span>
+         <span class="k">if</span> <span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">AccessController</span><span class="o">.</span><span class="na">doPrivileged</span><span class="o">((</span><span class="nc">PrivilegedAction</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;)</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+               <span class="n">smartSingleton</span><span class="o">.</span><span class="na">afterSingletonsInstantiated</span><span class="o">();</span>
+               <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">},</span> <span class="n">getAccessControlContext</span><span class="o">());</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="o">{</span>
+            <span class="n">smartSingleton</span><span class="o">.</span><span class="na">afterSingletonsInstantiated</span><span class="o">();</span>
+         <span class="o">}</span>
+         <span class="n">smartInitialize</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>getBean(beanName); 로 이동하여, doGetBean 구현부로 이동한다.</li>
+</ul>
+
+<p>###</p>
+
+<h4 id="abstractbeanfactoryjava">AbstractBeanFactory.java</h4>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">doGetBean</span><span class="o">(</span>
+      <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Class</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">requiredType</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">typeCheckOnly</span><span class="o">)</span>
+      <span class="kd">throws</span> <span class="nc">BeansException</span> <span class="o">{</span>
+
+   <span class="nc">String</span> <span class="n">beanName</span> <span class="o">=</span> <span class="n">transformedBeanName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+   <span class="nc">Object</span> <span class="n">beanInstance</span><span class="o">;</span>
+
+   <span class="c1">// Eagerly check singleton cache for manually registered singletons.</span>
+   <span class="nc">Object</span> <span class="n">sharedInstance</span> <span class="o">=</span> <span class="n">getSingleton</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">sharedInstance</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">args</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isTraceEnabled</span><span class="o">())</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">isSingletonCurrentlyInCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">trace</span><span class="o">(</span><span class="s">"Returning eagerly cached instance of singleton bean '"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                  <span class="s">"' that is not fully initialized yet - a consequence of a circular reference"</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">trace</span><span class="o">(</span><span class="s">"Returning cached instance of singleton bean '"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="n">beanInstance</span> <span class="o">=</span> <span class="n">getObjectForBeanInstance</span><span class="o">(</span><span class="n">sharedInstance</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">beanName</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="k">else</span> <span class="o">{</span>
+      <span class="c1">// Fail if we're already creating this bean instance:</span>
+      <span class="c1">// We're assumably within a circular reference.</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">isPrototypeCurrentlyInCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+         <span class="k">throw</span> <span class="k">new</span> <span class="nf">BeanCurrentlyInCreationException</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+      <span class="o">}</span>
+
+      <span class="c1">// Check if bean definition exists in this factory.</span>
+      <span class="nc">BeanFactory</span> <span class="n">parentBeanFactory</span> <span class="o">=</span> <span class="n">getParentBeanFactory</span><span class="o">();</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">parentBeanFactory</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">containsBeanDefinition</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+         <span class="c1">// Not found -&gt; check parent.</span>
+         <span class="nc">String</span> <span class="n">nameToLookup</span> <span class="o">=</span> <span class="n">originalBeanName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">parentBeanFactory</span> <span class="k">instanceof</span> <span class="nc">AbstractBeanFactory</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">((</span><span class="nc">AbstractBeanFactory</span><span class="o">)</span> <span class="n">parentBeanFactory</span><span class="o">).</span><span class="na">doGetBean</span><span class="o">(</span>
+                  <span class="n">nameToLookup</span><span class="o">,</span> <span class="n">requiredType</span><span class="o">,</span> <span class="n">args</span><span class="o">,</span> <span class="n">typeCheckOnly</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">args</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// Delegation to parent with explicit args.</span>
+            <span class="k">return</span> <span class="o">(</span><span class="no">T</span><span class="o">)</span> <span class="n">parentBeanFactory</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">nameToLookup</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">requiredType</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// No args -&gt; delegate to standard getBean method.</span>
+            <span class="k">return</span> <span class="n">parentBeanFactory</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">nameToLookup</span><span class="o">,</span> <span class="n">requiredType</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">(</span><span class="no">T</span><span class="o">)</span> <span class="n">parentBeanFactory</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">nameToLookup</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+
+      <span class="k">if</span> <span class="o">(!</span><span class="n">typeCheckOnly</span><span class="o">)</span> <span class="o">{</span>
+         <span class="n">markBeanAsCreated</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+      <span class="o">}</span>
+
+      <span class="nc">StartupStep</span> <span class="n">beanCreation</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">applicationStartup</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="s">"spring.beans.instantiate"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">tag</span><span class="o">(</span><span class="s">"beanName"</span><span class="o">,</span> <span class="n">name</span><span class="o">);</span>
+      <span class="k">try</span> <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">requiredType</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">beanCreation</span><span class="o">.</span><span class="na">tag</span><span class="o">(</span><span class="s">"beanType"</span><span class="o">,</span> <span class="nl">requiredType:</span><span class="o">:</span><span class="n">toString</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="nc">RootBeanDefinition</span> <span class="n">mbd</span> <span class="o">=</span> <span class="n">getMergedLocalBeanDefinition</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+         <span class="n">checkMergedBeanDefinition</span><span class="o">(</span><span class="n">mbd</span><span class="o">,</span> <span class="n">beanName</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+
+         <span class="c1">// Guarantee initialization of beans that the current bean depends on.</span>
+         <span class="nc">String</span><span class="o">[]</span> <span class="n">dependsOn</span> <span class="o">=</span> <span class="n">mbd</span><span class="o">.</span><span class="na">getDependsOn</span><span class="o">();</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">dependsOn</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">dep</span> <span class="o">:</span> <span class="n">dependsOn</span><span class="o">)</span> <span class="o">{</span>
+               <span class="k">if</span> <span class="o">(</span><span class="n">isDependent</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">dep</span><span class="o">))</span> <span class="o">{</span>
+                  <span class="k">throw</span> <span class="k">new</span> <span class="nf">BeanCreationException</span><span class="o">(</span><span class="n">mbd</span><span class="o">.</span><span class="na">getResourceDescription</span><span class="o">(),</span> <span class="n">beanName</span><span class="o">,</span>
+                        <span class="s">"Circular depends-on relationship between '"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span> <span class="s">"' and '"</span> <span class="o">+</span> <span class="n">dep</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">);</span>
+               <span class="o">}</span>
+               <span class="n">registerDependentBean</span><span class="o">(</span><span class="n">dep</span><span class="o">,</span> <span class="n">beanName</span><span class="o">);</span>
+               <span class="k">try</span> <span class="o">{</span>
+                  <span class="n">getBean</span><span class="o">(</span><span class="n">dep</span><span class="o">);</span>
+               <span class="o">}</span>
+               <span class="k">catch</span> <span class="o">(</span><span class="nc">NoSuchBeanDefinitionException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="k">throw</span> <span class="k">new</span> <span class="nf">BeanCreationException</span><span class="o">(</span><span class="n">mbd</span><span class="o">.</span><span class="na">getResourceDescription</span><span class="o">(),</span> <span class="n">beanName</span><span class="o">,</span>
+                        <span class="s">"'"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span> <span class="s">"' depends on missing bean '"</span> <span class="o">+</span> <span class="n">dep</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+               <span class="o">}</span>
+            <span class="o">}</span>
+         <span class="o">}</span>
+
+         <span class="c1">// Create bean instance.</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">mbd</span><span class="o">.</span><span class="na">isSingleton</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">sharedInstance</span> <span class="o">=</span> <span class="n">getSingleton</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+               <span class="k">try</span> <span class="o">{</span>
+                  <span class="k">return</span> <span class="nf">createBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">mbd</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+               <span class="o">}</span>
+               <span class="k">catch</span> <span class="o">(</span><span class="nc">BeansException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="c1">// Explicitly remove instance from singleton cache: It might have been put there</span>
+                  <span class="c1">// eagerly by the creation process, to allow for circular reference resolution.</span>
+                  <span class="c1">// Also remove any beans that received a temporary reference to the bean.</span>
+                  <span class="n">destroySingleton</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                  <span class="k">throw</span> <span class="n">ex</span><span class="o">;</span>
+               <span class="o">}</span>
+            <span class="o">});</span>
+            <span class="n">beanInstance</span> <span class="o">=</span> <span class="n">getObjectForBeanInstance</span><span class="o">(</span><span class="n">sharedInstance</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">beanName</span><span class="o">,</span> <span class="n">mbd</span><span class="o">);</span>
+         <span class="o">}</span>
+
+         <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">mbd</span><span class="o">.</span><span class="na">isPrototype</span><span class="o">())</span> <span class="o">{</span>
+            <span class="c1">// It's a prototype -&gt; create a new instance.</span>
+            <span class="nc">Object</span> <span class="n">prototypeInstance</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">try</span> <span class="o">{</span>
+               <span class="n">beforePrototypeCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+               <span class="n">prototypeInstance</span> <span class="o">=</span> <span class="n">createBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">mbd</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">finally</span> <span class="o">{</span>
+               <span class="n">afterPrototypeCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">beanInstance</span> <span class="o">=</span> <span class="n">getObjectForBeanInstance</span><span class="o">(</span><span class="n">prototypeInstance</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">beanName</span><span class="o">,</span> <span class="n">mbd</span><span class="o">);</span>
+         <span class="o">}</span>
+
+         <span class="k">else</span> <span class="o">{</span>
+            <span class="nc">String</span> <span class="n">scopeName</span> <span class="o">=</span> <span class="n">mbd</span><span class="o">.</span><span class="na">getScope</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">hasLength</span><span class="o">(</span><span class="n">scopeName</span><span class="o">))</span> <span class="o">{</span>
+               <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">(</span><span class="s">"No scope name defined for bean ´"</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="nc">Scope</span> <span class="n">scope</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">scopes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">scopeName</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">scope</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+               <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">(</span><span class="s">"No Scope registered for scope name '"</span> <span class="o">+</span> <span class="n">scopeName</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">try</span> <span class="o">{</span>
+               <span class="nc">Object</span> <span class="n">scopedInstance</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                  <span class="n">beforePrototypeCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                  <span class="k">try</span> <span class="o">{</span>
+                     <span class="k">return</span> <span class="nf">createBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">mbd</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+                  <span class="o">}</span>
+                  <span class="k">finally</span> <span class="o">{</span>
+                     <span class="n">afterPrototypeCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                  <span class="o">}</span>
+               <span class="o">});</span>
+               <span class="n">beanInstance</span> <span class="o">=</span> <span class="n">getObjectForBeanInstance</span><span class="o">(</span><span class="n">scopedInstance</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">beanName</span><span class="o">,</span> <span class="n">mbd</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">catch</span> <span class="o">(</span><span class="nc">IllegalStateException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+               <span class="k">throw</span> <span class="k">new</span> <span class="nf">ScopeNotActiveException</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">scopeName</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+            <span class="o">}</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">catch</span> <span class="o">(</span><span class="nc">BeansException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+         <span class="n">beanCreation</span><span class="o">.</span><span class="na">tag</span><span class="o">(</span><span class="s">"exception"</span><span class="o">,</span> <span class="n">ex</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+         <span class="n">beanCreation</span><span class="o">.</span><span class="na">tag</span><span class="o">(</span><span class="s">"message"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">ex</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()));</span>
+         <span class="n">cleanupAfterBeanCreationFailure</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+         <span class="k">throw</span> <span class="n">ex</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="k">finally</span> <span class="o">{</span>
+         <span class="n">beanCreation</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+
+   <span class="k">return</span> <span class="nf">adaptBeanInstance</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">beanInstance</span><span class="o">,</span> <span class="n">requiredType</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>getSingleton</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+   // Quick check for existing instance without full singleton lock
+   Object singletonObject = this.singletonObjects.get(beanName);
+   if (singletonObject == null &amp;&amp; isSingletonCurrentlyInCreation(beanName)) {
+      singletonObject = this.earlySingletonObjects.get(beanName);
+      if (singletonObject == null &amp;&amp; allowEarlyReference) {
+         synchronized (this.singletonObjects) {
+            // Consistent creation of early reference within full singleton lock
+            singletonObject = this.singletonObjects.get(beanName);
+            if (singletonObject == null) {
+               singletonObject = this.earlySingletonObjects.get(beanName);
+               if (singletonObject == null) {
+                  ObjectFactory&lt;?&gt; singletonFactory = this.singletonFactories.get(beanName);
+                  if (singletonFactory != null) {
+                     singletonObject = singletonFactory.getObject();
+                     this.earlySingletonObjects.put(beanName, singletonObject);
+                     this.singletonFactories.remove(beanName);
+                  }
+               }
+            }
+         }
+      }
+   }
+   return singletonObject;
+}
+</code></pre></div></div>
+

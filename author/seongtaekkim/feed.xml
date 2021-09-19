@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://seongtaekkim.github.io/author/seongtaekkim/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" />
-  <updated>2021-09-11T19:25:22+09:00</updated>
+  <updated>2021-09-19T12:20:01+09:00</updated>
   <id>https://seongtaekkim.github.io/author/seongtaekkim/feed.xml</id>
 
   
@@ -32,6 +32,130 @@
 
   
     <entry>
+      <title type="html">JAVA CORE - JVM</title>
+      <link href="https://seongtaekkim.github.io/java-jvm" rel="alternate" type="text/html" title="JAVA CORE - JVM" />
+      <published>2021-09-18T09:40:00+09:00</published>
+      <updated>2021-09-18T09:40:00+09:00</updated>
+      <id>https://seongtaekkim.github.io/java-jvm</id>
+      <content type="html" xml:base="https://seongtaekkim.github.io/java-jvm">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– JAVA CORE –&lt;/span&gt;&lt;/p&gt;
+&lt;ul class=&quot;table-of-contents-list&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;./java-jvm&quot;&gt;JAVA CORE - JVM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;jvm-구조-및-분석-작성중&quot;&gt;JVM 구조 및 분석 (작성중)&lt;/h1&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;jvm&quot;&gt;JVM&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Java Virtual machine&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;바이트코드(.class)를 OS에 특화된 코드로 변환(인터프리터, JIT)하여 실행.&lt;/li&gt;
+  &lt;li&gt;JVM은 벤더사마다 다르게 구현되어있다. (오라클, 아마존 등)
+    &lt;ul&gt;
+      &lt;li&gt;특정 플랫폼에 종속적이다&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;jvm-구조&quot;&gt;JVM 구조&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;클래스로더
+    &lt;ul&gt;
+      &lt;li&gt;로딩 -&amp;gt; 링크 -&amp;gt; 초기화&lt;/li&gt;
+      &lt;li&gt;.class에서 바이트코드를 읽고 메모리에 저장한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;메모리
+    &lt;ul&gt;
+      &lt;li&gt;스택,PC,힙,메소드&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;실행엔진
+    &lt;ul&gt;
+      &lt;li&gt;인터프리터, JIT컴파일러, GC&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;classloader-예제&quot;&gt;ClassLoader 예제&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;java프로젝트를 시작하고, class를 로딩한 주체를 출력해보자&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;결과-출력&quot;&gt;결과 출력&lt;/h4&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jdk.internal.loader.ClassLoaders$AppClassLoader@2437c6dc
+jdk.internal.loader.ClassLoaders$PlatformClassLoader@7c30a502
+null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;클래스로더는 계층구조로 되어있다.
+    &lt;ul&gt;
+      &lt;li&gt;APP -&amp;gt; PLATFORM -&amp;gt; BOOT 순서로 계층구조로 되어있다.&lt;/li&gt;
+      &lt;li&gt;BOOT의 경우, native code로 작성되어 null로 조회된다고 한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;​&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/built/images/java/java-jvm1.png&quot; align=&quot;left&quot; height=&quot;250px&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ClassLoaders.java에 클래스로더 맴버변수를 확인할 수 있다,&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/built/images/java/java-jvm2.png&quot; align=&quot;left&quot; height=&quot;300px&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ClassLoader 계층구조&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>seongtaekkim</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="java" />
+      
+
+      
+        <summary type="html">– JAVA CORE – JAVA CORE - JVM</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
       <title type="html">스프링 따라하기</title>
       <link href="https://seongtaekkim.github.io/springframework-remake" rel="alternate" type="text/html" title="스프링 따라하기" />
       <published>2021-09-11T15:36:01+09:00</published>
@@ -52,10 +176,10 @@
 
 &lt;p&gt;toy-framework를 활용한 웹사이트 로그인&lt;/p&gt;
 
-&lt;p&gt;3.구현방식&lt;/p&gt;
+&lt;p&gt;3.구현내용&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;spring container 구현&lt;/li&gt;
+  &lt;li&gt;bean container 구현&lt;/li&gt;
   &lt;li&gt;aop 구현&lt;/li&gt;
   &lt;li&gt;dataAccess 구현&lt;/li&gt;
   &lt;li&gt;context 구현&lt;/li&gt;
@@ -3207,128 +3331,6 @@ tx 스키마의 jta-transactlon-manager 태그를 이용해 JTA 트랜잭션 매
 
       
         <summary type="html">– 토비의스프링 1권 정리 토비의스프링1권 8장 토비의스프링1권 9장</summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">java 강좌(1) - Python 두번째 강의</title>
-      <link href="https://seongtaekkim.github.io/java-advanced" rel="alternate" type="text/html" title="java 강좌(1) - Python 두번째 강의" />
-      <published>2018-09-28T01:40:00+09:00</published>
-      <updated>2018-09-28T01:40:00+09:00</updated>
-      <id>https://seongtaekkim.github.io/java-advanced</id>
-      <content type="html" xml:base="https://seongtaekkim.github.io/java-advanced">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;Python 강좌는 여러 절로 구성되어 있습니다. &lt;/span&gt;&lt;/p&gt;
-&lt;ul class=&quot;table-of-contents-list&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-basic&quot;&gt;java 강좌(1) - java 기본&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-advanced&quot;&gt;java 강좌(2) java  제어문&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;noscript&gt;&lt;pre&gt;---
-layout: null
----
-
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
-&amp;lt;urlset xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;
-        xsi:schemaLocation=&amp;quot;http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd&amp;quot;
-        xmlns=&amp;quot;http://www.sitemaps.org/schemas/sitemap/0.9&amp;quot;&amp;gt;
-    {% for post in site.posts %}
-    &amp;lt;url&amp;gt;
-        &amp;lt;loc&amp;gt;{{ site.url }}{{ post.url }}.html&amp;lt;/loc&amp;gt;
-        {% if post.lastmod == null %}
-        &amp;lt;lastmod&amp;gt;{{ post.date | date_to_xmlschema }}&amp;lt;/lastmod&amp;gt;
-        {% else %}
-        &amp;lt;lastmod&amp;gt;{{ post.lastmod | date_to_xmlschema }}&amp;lt;/lastmod&amp;gt;
-        {% endif %}
-
-        {% if post.sitemap.changefreq == null %}
-        &amp;lt;changefreq&amp;gt;weekly&amp;lt;/changefreq&amp;gt;
-        {% else %}
-        &amp;lt;changefreq&amp;gt;{{ post.sitemap.changefreq }}&amp;lt;/changefreq&amp;gt;
-        {% endif %}
-
-        {% if post.sitemap.priority == null %}
-        &amp;lt;priority&amp;gt;0.5&amp;lt;/priority&amp;gt;
-        {% else %}
-        &amp;lt;priority&amp;gt;{{ post.sitemap.priority }}&amp;lt;/priority&amp;gt;
-        {% endif %}
-
-    &amp;lt;/url&amp;gt;
-    {% endfor %}
-&amp;lt;/urlset&amp;gt;&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/seongtaekkim/930b19a8b15c9384b3ec66a3c3f57a7a.js&quot;&gt; &lt;/script&gt;
-
-&lt;p&gt;waeawg
-두번째 강의&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>seongtaekkim</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="java" />
-      
-
-      
-        <summary type="html">Python 강좌는 여러 절로 구성되어 있습니다. java 강좌(1) - java 기본 java 강좌(2) java 제어문</summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">java 강좌(1) - Python 기본</title>
-      <link href="https://seongtaekkim.github.io/java-basic" rel="alternate" type="text/html" title="java 강좌(1) - Python 기본" />
-      <published>2018-09-28T01:40:00+09:00</published>
-      <updated>2018-09-28T01:40:00+09:00</updated>
-      <id>https://seongtaekkim.github.io/java-basic</id>
-      <content type="html" xml:base="https://seongtaekkim.github.io/java-basic">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;Python 강좌는 여러 절로 구성되어 있습니다. &lt;/span&gt;&lt;/p&gt;
-&lt;ul class=&quot;table-of-contents-list&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-basic&quot;&gt;java 강좌(1) - java 기본&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;./java-advanced&quot;&gt;java 강좌(2) java  제어문&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;가나다라마바사&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;syntaxHighlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-   &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Hello World&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-   &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>seongtaekkim</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="java" />
-      
-
-      
-        <summary type="html">Python 강좌는 여러 절로 구성되어 있습니다. java 강좌(1) - java 기본 java 강좌(2) java 제어문</summary>
       
 
       

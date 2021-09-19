@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://seongtaekkim.github.io/tag/spring/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" />
-  <updated>2021-09-11T19:25:22+09:00</updated>
+  <updated>2021-09-19T12:20:01+09:00</updated>
   <id>https://seongtaekkim.github.io/tag/spring/feed.xml</id>
 
   
@@ -52,10 +52,10 @@
 
 &lt;p&gt;toy-framework를 활용한 웹사이트 로그인&lt;/p&gt;
 
-&lt;p&gt;3.구현방식&lt;/p&gt;
+&lt;p&gt;3.구현내용&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;spring container 구현&lt;/li&gt;
+  &lt;li&gt;bean container 구현&lt;/li&gt;
   &lt;li&gt;aop 구현&lt;/li&gt;
   &lt;li&gt;dataAccess 구현&lt;/li&gt;
   &lt;li&gt;context 구현&lt;/li&gt;
