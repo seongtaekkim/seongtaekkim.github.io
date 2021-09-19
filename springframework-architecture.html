@@ -56,7 +56,7 @@
     <meta property="og:site_name" content="웹개발자" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="스프링 따라하기" />
-    <meta property="og:description" content="– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​ 웹 애플리케이션이 실행되면 Tomcat(WAS)에" />
+    <meta property="og:description" content="– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 springframework - bean생성원리 분석(1) SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​" />
     <meta property="og:url" content="https://seongtaekkim.github.io/springframework-architecture" />
     <meta property="og:image" content="https://seongtaekkim.github.io/assets/built/images/spring-framework1.png" />
     <meta property="article:publisher" content="https://www.facebook.com/" />
@@ -66,7 +66,7 @@
     <meta property="article:tag" content="Spring" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="스프링 따라하기" />
-    <meta name="twitter:description" content="– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​ 웹 애플리케이션이 실행되면 Tomcat(WAS)에" />
+    <meta name="twitter:description" content="– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 springframework - bean생성원리 분석(1) SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​" />
     <meta name="twitter:url" content="https://seongtaekkim.github.io/" />
     <meta name="twitter:image" content="https://seongtaekkim.github.io/assets/built/images/spring-framework1.png" />
     <meta name="twitter:label1" content="Written by" />
@@ -98,7 +98,7 @@
         "@type": "WebPage",
         "@id": "https://seongtaekkim.github.io/springframework-architecture"
     },
-    "description": "– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​ 웹 애플리케이션이 실행되면 Tomcat(WAS)에"
+    "description": "– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 springframework - bean생성원리 분석(1) SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​"
 }
     </script>
 
@@ -197,6 +197,7 @@ into the {body} of the default.hbs template -->
 <ul class="table-of-contents-list">
     <li><a href="./springframework-remake">springframework - 따라하기</a></li>
     <li><a href="./springframework-architecture">springframework - 아키텍처</a></li>
+    <li><a href="./springframework-bean(1)">springframework - bean생성원리 분석(1)</a></li>
 </ul>
 <h1 id="springframework-architecture">SpringFramework architecture</h1>
 
@@ -478,6 +479,13 @@ into the {body} of the default.hbs template -->
                                 
                                 
                                   
+                                    
+                                        
+                                        
+                                            <li><a href="/springframework-bean(1)">스프링 bean생성원리 분석(1)</a></li>
+                                        
+                                    
+                                  
                                 
                                   
                                 
@@ -513,8 +521,6 @@ into the {body} of the default.hbs template -->
                                     
                                         
                                         
-                                            <li><a href="/spring-toby1_9">토비의스프링1권 9장 내용</a></li>
-                                        
                                     
                                   
                                 
@@ -530,7 +536,7 @@ into the {body} of the default.hbs template -->
                         <footer class="read-next-card-footer">
                             <a href="/tag/spring/">
                                 
-                                    See all 5 posts  →
+                                    See all 6 posts  →
                                 
                             </a>
                         </footer>
@@ -542,18 +548,32 @@ into the {body} of the default.hbs template -->
             
                 
 
-    <article class="post-card  no-image">
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/java-jvm">
+                <div class="post-card-image" style="background-image: url(/assets/built/images/bus.jpg)"></div>
+            </a>
         
         <div class="post-card-content">
-            <a class="post-card-content-link" href="/springframework-bean(1)">
+            <a class="post-card-content-link" href="/java-jvm">
                 <header class="post-card-header">
                     
+                        
+                            
+                                <span class="post-card-tags">Java</span>
+                            
+                        
+                    
 
-                    <h2 class="post-card-title">Springframework Bean(1)</h2>
+                    <h2 class="post-card-title">JAVA CORE - JVM</h2>
                 </header>
                 <section class="post-card-excerpt">
                     
-                        <p>
+                        <p>– JAVA CORE –
+
+    JAVA CORE - JVM
+
+
 </p>
                     
                 </section>
@@ -561,11 +581,18 @@ into the {body} of the default.hbs template -->
             <footer class="post-card-meta">
                 
                     
+                        
+                        <img class="author-profile-image" src="/assets/built/images/author-logo.jpg" alt="seongtaekkim" />
+                        
+                        <span class="post-card-author">
+                            <a href="/author/seongtaekkim/">seongtaekkim</a>
+                        </span>
+                    
                 
                 <span class="reading-time">
                     
                     
-                      8 min read
+                      1 min read
                     
                 </span>
             </footer>
@@ -603,6 +630,7 @@ into the {body} of the default.hbs template -->
 
     springframework - 따라하기
     springframework - 아키텍처
+    springframework - bean생성원리 분석(1)
 
 SpringFramework 따라하기
 

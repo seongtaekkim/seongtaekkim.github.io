@@ -8,6 +8,26 @@
     
       
       <item>
+        <title>스프링 bean생성원리 분석(1)</title>
+        
+          <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
+&lt;ul class=&quot;table-of-contents-list&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-remake&quot;&gt;springframework - 따라하기&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-architecture&quot;&gt;springframework - 아키텍처&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-bean(1)&quot;&gt;springframework - bean생성원리 분석(1)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Sun, 19 Sep 2021 04:36:01 +0900</pubDate>
+        <link>
+        https://seongtaekkim.github.io/springframework-bean(1)</link>
+        <guid isPermaLink="true">https://seongtaekkim.github.io/springframework-bean(1)</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>JAVA CORE - JVM</title>
         
           <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– JAVA CORE –&lt;/span&gt;&lt;/p&gt;
@@ -26,26 +46,13 @@
     
       
       <item>
-        <title>Springframework Bean(1)</title>
-        
-          <description>
-</description>
-        
-        <pubDate>Sat, 18 Sep 2021 00:00:00 +0900</pubDate>
-        <link>
-        https://seongtaekkim.github.io/springframework-bean(1)</link>
-        <guid isPermaLink="true">https://seongtaekkim.github.io/springframework-bean(1)</guid>
-      </item>
-      
-    
-      
-      <item>
         <title>스프링 따라하기</title>
         
           <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
 &lt;ul class=&quot;table-of-contents-list&quot;&gt;
     &lt;li&gt;&lt;a href=&quot;./springframework-remake&quot;&gt;springframework - 따라하기&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href=&quot;./springframework-architecture&quot;&gt;springframework - 아키텍처&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-bean(1)&quot;&gt;springframework - bean생성원리 분석(1)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;springframework-architecture&quot;&gt;SpringFramework architecture&lt;/h1&gt;
 
@@ -66,6 +73,7 @@
 &lt;ul class=&quot;table-of-contents-list&quot;&gt;
     &lt;li&gt;&lt;a href=&quot;./springframework-remake&quot;&gt;springframework - 따라하기&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href=&quot;./springframework-architecture&quot;&gt;springframework - 아키텍처&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;./springframework-bean(1)&quot;&gt;springframework - bean생성원리 분석(1)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;springframework-따라하기&quot;&gt;SpringFramework 따라하기&lt;/h2&gt;
 
