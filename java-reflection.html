@@ -11,7 +11,7 @@
 
 
 
-    <title>스프링 따라하기</title>
+    <title>JAVA CORE - Reflection</title>
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Styles'n'Scripts -->
@@ -49,30 +49,48 @@
     <!-- This tag outputs SEO meta+structured data and other important settings -->
     <meta name="description" content="IT" />
     <link rel="shortcut icon" href="https://seongtaekkim.github.io/assets/built/images/favicon.jpg" type="image/png" />
-    <link rel="canonical" href="https://seongtaekkim.github.io/springframework-architecture" />
+    <link rel="canonical" href="https://seongtaekkim.github.io/java-reflection" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
      <!--title below is coming from _includes/dynamic_title-->
     <meta property="og:site_name" content="웹개발자" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="스프링 따라하기" />
-    <meta property="og:description" content="– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 springframework - bean생성원리 분석(1) SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​" />
-    <meta property="og:url" content="https://seongtaekkim.github.io/springframework-architecture" />
-    <meta property="og:image" content="https://seongtaekkim.github.io/assets/built/images/spring-framework1.png" />
+    <meta property="og:title" content="JAVA CORE - Reflection" />
+    <meta property="og:description" content="– JAVA CORE –
+
+    JAVA CORE - JVM
+
+
+(작성중)
+
+Reflection 예제
+
+" />
+    <meta property="og:url" content="https://seongtaekkim.github.io/java-reflection" />
+    <meta property="og:image" content="https://seongtaekkim.github.io/assets/built/images/bus.jpg" />
     <meta property="article:publisher" content="https://www.facebook.com/" />
     <meta property="article:author" content="https://www.facebook.com/" />
-    <meta property="article:published_time" content="2021-09-11T15:36:01+09:00" />
-    <meta property="article:modified_time" content="2021-09-11T15:36:01+09:00" />
-    <meta property="article:tag" content="Spring" />
+    <meta property="article:published_time" content="2021-09-19T09:40:00+09:00" />
+    <meta property="article:modified_time" content="2021-09-19T09:40:00+09:00" />
+    <meta property="article:tag" content="Java" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="스프링 따라하기" />
-    <meta name="twitter:description" content="– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 springframework - bean생성원리 분석(1) SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​" />
+    <meta name="twitter:title" content="JAVA CORE - Reflection" />
+    <meta name="twitter:description" content="– JAVA CORE –
+
+    JAVA CORE - JVM
+
+
+(작성중)
+
+Reflection 예제
+
+" />
     <meta name="twitter:url" content="https://seongtaekkim.github.io/" />
-    <meta name="twitter:image" content="https://seongtaekkim.github.io/assets/built/images/spring-framework1.png" />
+    <meta name="twitter:image" content="https://seongtaekkim.github.io/assets/built/images/bus.jpg" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="웹개발자" />
     <meta name="twitter:label2" content="Filed under" />
-    <meta name="twitter:data2" content="Spring" />
+    <meta name="twitter:data2" content="Java" />
     <meta name="twitter:site" content="@" />
     <meta name="twitter:creator" content="@" />
     <meta property="og:image:width" content="1400" />
@@ -87,18 +105,27 @@
         "name": "웹개발자",
         "logo": "https://seongtaekkim.github.io/"
     },
-    "url": "https://seongtaekkim.github.io/springframework-architecture",
+    "url": "https://seongtaekkim.github.io/java-reflection",
     "image": {
         "@type": "ImageObject",
-        "url": "https://seongtaekkim.github.io/assets/built/images/spring-framework1.png",
+        "url": "https://seongtaekkim.github.io/assets/built/images/bus.jpg",
         "width": 2000,
         "height": 666
     },
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://seongtaekkim.github.io/springframework-architecture"
+        "@id": "https://seongtaekkim.github.io/java-reflection"
     },
-    "description": "– 스프링 따라하기 – springframework - 따라하기 springframework - 아키텍처 springframework - bean생성원리 분석(1) SpringFramework architecture 아키텍처 실제 구동순서 Web Application = Web Server + Web Container(= Servlet Container) Web Container 는 유저의 요청에 따라 Servlet 자원에 대한 생명주기를 관리합니다. webContainer : servlet 단위 처리 springContainer : bean 단위처리 ​"
+    "description": "– JAVA CORE –
+
+    JAVA CORE - JVM
+
+
+(작성중)
+
+Reflection 예제
+
+"
 }
     </script>
 
@@ -111,7 +138,7 @@
     </script> -->
 
     <meta name="generator" content="Jekyll 3.6.2" />
-    <link rel="alternate" type="application/rss+xml" title="스프링 따라하기" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="JAVA CORE - Reflection" href="/feed.xml" />
 
 
 </head>
@@ -168,207 +195,39 @@ into the {body} of the default.hbs template -->
 <main id="site-main" class="site-main outer" role="main">
     <div class="inner">
 
-        <article class="post-full  tag-spring post tag-spring ">
+        <article class="post-full  tag-java post tag-java ">
 
             <header class="post-full-header">
                 <section class="post-full-meta">
-                    <time class="post-full-meta-date" datetime="11 September 2021">11 September 2021</time>
+                    <time class="post-full-meta-date" datetime="19 September 2021">19 September 2021</time>
                     
                         <span class="date-divider">/</span>
                         
                             
-                               <a href='/tag/spring/'>SPRING</a>
+                               <a href='/tag/java/'>JAVA</a>
                             
                         
                     
                 </section>
-                <h1 class="post-full-title">스프링 따라하기</h1>
+                <h1 class="post-full-title">JAVA CORE - Reflection</h1>
             </header>
 
 <!-- 블로그 글 입장 시 커버이미지 표시
            
-            <figure class="post-full-image" style="background-image: url(/assets/built/images/spring-framework1.png)">
+            <figure class="post-full-image" style="background-image: url(/assets/built/images/bus.jpg)">
             </figure>
             -->
 
             <section class="post-full-content">
                 <div class="kg-card-markdown">
-                    <p><span class="table-of-contents-list">– 스프링 따라하기 –</span></p>
+                    <p><span class="table-of-contents-list">– JAVA CORE –</span></p>
 <ul class="table-of-contents-list">
-    <li><a href="./springframework-remake">springframework - 따라하기</a></li>
-    <li><a href="./springframework-architecture">springframework - 아키텍처</a></li>
-    <li><a href="./springframework-bean(1)">springframework - bean생성원리 분석(1)</a></li>
-</ul>
-<h1 id="springframework-architecture">SpringFramework architecture</h1>
-
-<h2 id="아키텍처">아키텍처</h2>
-
-<p><img src="https://blog.kakaocdn.net/dn/dXQ6s0/btqCXvb5fVY/AzjKoJZiB8jfWvkN1Njbhk/img.png" alt="img" /></p>
-
-<h2 id="실제-구동순서">실제 구동순서</h2>
-
-<ul>
-  <li><strong>Web Application</strong> = <strong>Web Server</strong> + <strong>Web Container</strong>(= Servlet Container)</li>
-  <li><strong>Web Container</strong> 는 유저의 요청에 따라 <strong>Servlet 자원에 대한 생명주기를 관리</strong>합니다.</li>
-  <li>webContainer : servlet 단위 처리</li>
-  <li>springContainer : bean 단위처리</li>
+    <li><a href="./java-jvm">JAVA CORE - JVM</a></li>
 </ul>
 
-<p>​</p>
+<h3 id="작성중">(작성중)</h3>
 
-<p><img src="https://aaronryu.github.io/2021/02/14/a-tutorial-for-spring-mvc-and-security/spring-web-application-description-3-filter-and-interceptor.png" alt="img" /></p>
-
-<ol>
-  <li>
-    <p>웹 애플리케이션이 실행되면 Tomcat(WAS)에 의해 web.xml이 로딩된다.</p>
-
-    <p>(load-on-startup으로 톰캣 시작시 servlet생성 가능하도록 설정 가능)</p>
-  </li>
-  <li>
-    <p>web.xml에 등록되어 있는 ContextLoaderListener(Java class)가 생성된다. ContextLoaderListener 클래스는 ServletContextListener 인터페이스를 구현하고 있으며, ApplicationContext를 생성하는 역할을 수행한다.</p>
-  </li>
-  <li>
-    <p>생성된 ContextLoaderListener는 applicationContext.xml을 로딩한다.</p>
-  </li>
-  <li>
-    <p>applicationContext.xml에 등록되어 있는 설정에 따라 Spring Container가 구동된다. 이때 개발자가 작성한 비즈니스 로징에 대한 부분과 DAO, VO 객체들이 생성된다.</p>
-  </li>
-  <li>
-    <p>클라이언트로부터 웹애플리케이션 요청이 온다. (FrontController 패턴에 의해 수행된다.)</p>
-  </li>
-  <li>
-    <p>DispatcherServlet(Servlet)이 생성된다. DispatcherServlet은 FrontController의 역할을 수행한다. 클라이언트로부터 요청 온 메시지를 분석하여 알맞은 PageController에게 전달하고 응답을 받아 요청에 따른 응답을 어떻게 할지 결정만 한다. 실질적인 작업은 PageControlle에서 이뤄지기 때문이다. 이러한 클래스들을 HandlerMapping, ViewResolver클래스라고 한다.</p>
-  </li>
-  <li>
-    <p>DispatcherServlet은 servlet-context.xml(spring-mvc.xml)을 로딩한다.</p>
-  </li>
-  <li>
-    <p>두 번째 Spring Container가 구동되면 응답에 맞는 PageController들이 동작한다. 이때 첫 번째 Spring Container가 구동되면서 생성된 DAO, VO, ServiceImpl 클래스들과 협업하여 알맞은 작업을 처리하게 된다.</p>
-  </li>
-</ol>
-
-<h2 id="모듈-의존관계">모듈 의존관계</h2>
-
-<ul>
-  <li>(모듈 == .jar)</li>
-</ul>
-
-<p><img src="https://media.vlpt.us/images/wldus9503/post/b172f1a8-1463-4ee8-89c0-0fe8786b4fe8/spring%EB%AA%A8%EB%93%88%20%EC%9D%98%EC%A1%B4%EA%B4%80%E3%84%B1.png" alt="" /></p>
-
-<h2 id="모듈별-역할">모듈별 역할</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>ArtifactId</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>spring-aop</td>
-      <td>프록시 기반 AOP를 만들 때 필요한 어드바이스, 포인트컷, 프록시 팩토리빈, 자동 프록시 생성기 등을 제공<br /> - 필수 라이브러리 - Beans</td>
-    </tr>
-    <tr>
-      <td>spring-aspects</td>
-      <td>스프링이 제공하는 AspectJ AOP를 사용할 때 필요한 모듈<br /> - JPA 지원 기능 사용시 ORM, 트랜잭션 기능 지원시 Transaction 필요</td>
-    </tr>
-    <tr>
-      <td>spring-beans</td>
-      <td>스프링 DI 기능의 핵심인 빈 팩토리와 DI 기능을 제공하는 모듈<br /> - 빈 메타 정보, 빈 리더, 빈 팩토리의 구현과 프로퍼티 에디터가 포함<br /> - 필수 라이브러리 - ASM, Core</td>
-    </tr>
-    <tr>
-      <td>spring-context</td>
-      <td>어플리케이션 컨텍스트 기능을 제공<br />- 어플리케이션 컨텍스트를 만드는 데 필요한 대부분의 기능과 빈 스캐너, 자바코드 설정 기능, EJB 지원, 포메터, 로드타임 위빙, 표현식,<br />- 단순한 빈팩토리가 아닌 엔터프라이즈 어플리케이션 프레임워크로 사용하기 위해 반드시 필요합니다.<br />- 필수 라이브러리 - AOP, Expression</td>
-    </tr>
-    <tr>
-      <td>spring-context-support</td>
-      <td>JMX JNDI, 리모팅, 스케줄링, 스크립트 언어 지원, 검증기 등의 컨테이너로서의 주요한 기능을 담고 있습니다.어플리케이션 컨텍스트에서 필요로 하는 부가기능을 지원<br /> - EhCache, 메일 추상화 서비스, CommonJ와 Quartz 스케줄링, FreeMarker, JasperReports, Velocity 팩토리 기능을 제공<br />- 위의 기능을 사용하지 않으면 해당모듈은 필요업지만, 스프링 MVC가 Context.Support에 의존하므로 스프링 MVC를 사용한다면 필수로 추가해야 한다.</td>
-    </tr>
-    <tr>
-      <td>spring-core</td>
-      <td>스프링 모듈에서 필요로 하는 공통 기능을 갖는 핵심 모듈<br /> - 스프링에서 사용하는 주요 어노테이션, 컨버터, 상수, 유틸리티 클래스 등을 제공<br /> - 선택적 의존 - ASM</td>
-    </tr>
-    <tr>
-      <td>spring-expression</td>
-      <td>스프링 표현식 언어(SpEL) 기능을 지원<br /> - 필수 라이브러리 - Core</td>
-    </tr>
-    <tr>
-      <td>spring-instrument</td>
-      <td>스프링의 로드타임위버(LTW) 기능을 적용할 때 필요함.<br />JVM의 -javaagent 옵션을 자용해 자바에이전트로도 사용됨.</td>
-    </tr>
-    <tr>
-      <td>spring-instrument-tomcat</td>
-      <td>애플리케이션이 아닌 톰캣 서버의 클래스 로더로 사용하는 모듈</td>
-    </tr>
-    <tr>
-      <td>spring-jdbc</td>
-      <td>JDBC 템플릿을 포함한 JDBC 지원 기능을 제공<br />- JdbcTemplate 등의 JDBC 지원 오브젝트 외에도 스프링이 직접 제공하는 DataSource 구현 클래스들이 제공<br />- 필수 라이브러리 - 트랜잭션</td>
-    </tr>
-    <tr>
-      <td>spring-jms</td>
-      <td>스프링의 JMS 지원 기능을 사용할 때 필요한 모듈<br /> - 필수 라이브러리 - Transaction</td>
-    </tr>
-    <tr>
-      <td>spring-messaging</td>
-      <td>스프링 메세징 기능을 제공한다.</td>
-    </tr>
-    <tr>
-      <td>spring-orm</td>
-      <td>하이버네이트, JPA, JDO, iBatis와 같은 ORM에 대한 스프링의 지원 기능<br /> - 내부적으로 JDBC를 사용한다.<br /> - 필수 라이브러리 : JDBC</td>
-    </tr>
-    <tr>
-      <td>spring-oxm</td>
-      <td>Object/XML Mapping</td>
-    </tr>
-    <tr>
-      <td>spring-test</td>
-      <td>Test는 스프링의 테스트 지원기능을 가진 모듈<br />(테스트 컨텍스트 프레임워크나 목 오브젝트 등을 이용)</td>
-    </tr>
-    <tr>
-      <td>spring-tx</td>
-      <td>스프링의 데이터 액세스 추상화의 공통 기능을 담고 있습니다.<br /> - DataAcssessException 예외 계층구조와 트랜잭션 추상화 기능, 트랜잭션 동기화 저장소 그리고 JCA 기능을 포함<br />- 필수 라이브러리 - Context</td>
-    </tr>
-    <tr>
-      <td>spring-web</td>
-      <td>스프링 웹 기술의 공통적인 기능을 정의한 모듈<br />- 바인딩, 컨텍스트 로더, 필터, 멀티파트, 메세지 컨버터 기능을 제공<br />- 스프링 MVC 외에도 스프링이 지원하는 스트럿츠, JSF 등을 적용할 때 필요<br />- Caucho, HttpInvoker, JAX-RPC, JAX-WS 등의 리모팅 기능도 포함<br />- 필수 라이브러리 - Context</td>
-    </tr>
-    <tr>
-      <td>spring-webmvc</td>
-      <td>스프링 MVC 기능을 제공하는 모듈<br /> - 필수 라이브러리 - Web, Context.Support</td>
-    </tr>
-    <tr>
-      <td>portlet</td>
-      <td>Portlet 개발에 사용하는 스프링 모듈<br /> - 필수 라이브러리 - Web.Servlet</td>
-    </tr>
-    <tr>
-      <td>spring-websocket</td>
-      <td>WebSocket and SockJS infrastructure, including STOMP messaging support</td>
-    </tr>
-    <tr>
-      <td>spring -asm</td>
-      <td>ASM 모듈은 클래스 바이트코드 조작 및 분석 프레임워크인 ASM을 재 패키징한 모듈입니다.<br /> - ASM 프레임워크는 스프링 뿐 아니라 여러 프레임워크에서 및 라이브러리에서 사용되는데 이때 스프링 프레임워크와<br />ASM을 사용하는 다른 프레임워크와의 충돌을 방지하기 위해 org.springframework.asm 패키지로 재패키징해 독립적인 모듈로 제공합니다.</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h4 id="출처">출처</h4>
-
-<p>1.스프링 모듈 의존관계 설명</p>
-
-<p>https://dololak.tistory.com/2</p>
-
-<p>2.ApplicationContext 와 WebApplicationContext  차이</p>
-
-<p>https://dololak.tistory.com/21?category=636502</p>
-
-<p>3.스프링 동작순서</p>
-
-<p>https://aaronryu.github.io/2021/02/14/a-tutorial-for-spring-mvc-and-security/</p>
-
-<p>※ 저작권 문제 시 삭제하겠습니다.</p>
+<p>Reflection 예제</p>
 
 
                 </div>
@@ -433,9 +292,9 @@ into the {body} of the default.hbs template -->
                     <div id="disqus_thread"></div>
                     <script>
                         var disqus_config = function () {
-                            var this_page_url = 'https://seongtaekkim.github.io/springframework-architecture';
-                            var this_page_identifier = '/springframework-architecture';
-                            var this_page_title = '스프링 따라하기';
+                            var this_page_url = 'https://seongtaekkim.github.io/java-reflection';
+                            var this_page_identifier = '/java-reflection';
+                            var this_page_title = 'JAVA CORE - Reflection';
                         };
                         (function() {
                             var d = document, s = d.createElement('script');
@@ -469,7 +328,7 @@ into the {body} of the default.hbs template -->
                         <header class="read-next-card-header">
                             <small class="read-next-card-header-sitetitle">&mdash; 웹개발자 &mdash;</small>
                             
-                                <h3 class="read-next-card-header-title"><a href="/tag/spring/">Spring</a></h3>
+                                <h3 class="read-next-card-header-title"><a href="/tag/java/">Java</a></h3>
                             
                         </header>
                         <div class="read-next-divider"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/></svg>
@@ -481,23 +340,6 @@ into the {body} of the default.hbs template -->
                                   
                                 
                                   
-                                
-                                  
-                                    
-                                        
-                                        
-                                            <li><a href="/springframework-bean(1)">스프링 bean생성원리 분석(1)</a></li>
-                                        
-                                    
-                                  
-                                
-                                  
-                                
-                                  
-                                    
-                                  
-                                
-                                  
                                     
                                   
                                 
@@ -507,40 +349,31 @@ into the {body} of the default.hbs template -->
                                     
                                         
                                         
-                                            <li><a href="/spring-toby2_2">토비의스프링2권 2장</a></li>
+                                            <li><a href="/java-jvm">JAVA CORE - JVM</a></li>
                                         
                                     
                                   
                                 
                                   
-                                    
-                                        
-                                        
-                                            <li><a href="/spring-toby1_8">토비의스프링1권 8장 내용</a></li>
-                                        
-                                    
+                                
                                   
                                 
                                   
-                                    
-                                        
-                                        
-                                    
+                                
                                   
                                 
                                   
-                                    
-                                        
-                                        
-                                    
+                                
+                                  
+                                
                                   
                                 
                             </ul>
                         </div>
                         <footer class="read-next-card-footer">
-                            <a href="/tag/spring/">
+                            <a href="/tag/java/">
                                 
-                                    See all 6 posts  →
+                                    See all 1 posts  →
                                 
                             </a>
                         </footer>
@@ -552,45 +385,24 @@ into the {body} of the default.hbs template -->
             
                 
 
-    <article class="post-card post-template">
-        
-            <a class="post-card-image-link" href="/java-jvm">
-                <div class="post-card-image" style="background-image: url(/assets/built/images/bus.jpg)"></div>
-            </a>
+    <article class="post-card  no-image">
         
         <div class="post-card-content">
-            <a class="post-card-content-link" href="/java-jvm">
+            <a class="post-card-content-link" href="/springframework-bean(2)">
                 <header class="post-card-header">
                     
-                        
-                            
-                                <span class="post-card-tags">Java</span>
-                            
-                        
-                    
 
-                    <h2 class="post-card-title">JAVA CORE - JVM</h2>
+                    <h2 class="post-card-title">Springframework Bean(2)</h2>
                 </header>
                 <section class="post-card-excerpt">
                     
-                        <p>– JAVA CORE –
-
-    JAVA CORE - JVM
-
-
+                        <p>
 </p>
                     
                 </section>
             </a>
             <footer class="post-card-meta">
                 
-                    
-                        
-                        <img class="author-profile-image" src="/assets/built/images/author-logo.jpg" alt="seongtaekkim" />
-                        
-                        <span class="post-card-author">
-                            <a href="/author/seongtaekkim/">seongtaekkim</a>
-                        </span>
                     
                 
                 <span class="reading-time">
@@ -611,12 +423,12 @@ into the {body} of the default.hbs template -->
 
     <article class="post-card post-template">
         
-            <a class="post-card-image-link" href="/springframework-remake">
+            <a class="post-card-image-link" href="/springframework-bean(1)">
                 <div class="post-card-image" style="background-image: url(/assets/built/images/spring-framework1.png)"></div>
             </a>
         
         <div class="post-card-content">
-            <a class="post-card-content-link" href="/springframework-remake">
+            <a class="post-card-content-link" href="/springframework-bean(1)">
                 <header class="post-card-header">
                     
                         
@@ -626,7 +438,7 @@ into the {body} of the default.hbs template -->
                         
                     
 
-                    <h2 class="post-card-title">스프링 따라하기</h2>
+                    <h2 class="post-card-title">스프링 bean생성원리 분석(1)</h2>
                 </header>
                 <section class="post-card-excerpt">
                     
@@ -636,7 +448,6 @@ into the {body} of the default.hbs template -->
     springframework - 아키텍처
     springframework - bean생성원리 분석(1)
 
-SpringFramework 따라하기
 
 </p>
                     
@@ -656,7 +467,7 @@ SpringFramework 따라하기
                 <span class="reading-time">
                     
                     
-                      1 min read
+                      9 min read
                     
                 </span>
             </footer>
@@ -678,18 +489,18 @@ SpringFramework 따라하기
         </a>
     </div>
     <span class="floating-header-divider">&mdash;</span>
-    <div class="floating-header-title">스프링 따라하기</div>
+    <div class="floating-header-title">JAVA CORE - Reflection</div>
     <div class="floating-header-share">
         <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
 </svg>
 </div>
-        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%EC%8A%A4%ED%94%84%EB%A7%81+%EB%94%B0%EB%9D%BC%ED%95%98%EA%B8%B0&amp;url=https://seongtaekkim.github.io/springframework-architecture"
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=JAVA+CORE+-+Reflection&amp;url=https://seongtaekkim.github.io/java-reflection"
             onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
 
         </a>
-        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://seongtaekkim.github.io/springframework-architecture"
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://seongtaekkim.github.io/java-reflection"
             onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
 

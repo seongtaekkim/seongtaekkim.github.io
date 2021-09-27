@@ -8,6 +8,38 @@
     
       
       <item>
+        <title>Springframework Bean(2)</title>
+        
+          <description>
+</description>
+        
+        <pubDate>Sat, 25 Sep 2021 00:00:00 +0900</pubDate>
+        <link>
+        https://seongtaekkim.github.io/springframework-bean(2)</link>
+        <guid isPermaLink="true">https://seongtaekkim.github.io/springframework-bean(2)</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>JAVA CORE - Reflection</title>
+        
+          <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– JAVA CORE –&lt;/span&gt;&lt;/p&gt;
+&lt;ul class=&quot;table-of-contents-list&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;./java-jvm&quot;&gt;JAVA CORE - JVM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Sun, 19 Sep 2021 09:40:00 +0900</pubDate>
+        <link>
+        https://seongtaekkim.github.io/java-reflection</link>
+        <guid isPermaLink="true">https://seongtaekkim.github.io/java-reflection</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>스프링 bean생성원리 분석(1)</title>
         
           <description>&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
