@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://seongtaekkim.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" /><updated>2021-10-03T13:53:49+09:00</updated><id>https://seongtaekkim.github.io/feed.xml</id><title type="html">웹개발자</title><subtitle>IT</subtitle><entry><title type="html">Java Collection</title><link href="https://seongtaekkim.github.io/java-collection" rel="alternate" type="text/html" title="Java Collection" /><published>2021-09-27T00:00:00+09:00</published><updated>2021-09-27T00:00:00+09:00</updated><id>https://seongtaekkim.github.io/java-collection</id><content type="html" xml:base="https://seongtaekkim.github.io/java-collection"></content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">Java Jeneric</title><link href="https://seongtaekkim.github.io/java-jeneric" rel="alternate" type="text/html" title="Java Jeneric" /><published>2021-09-27T00:00:00+09:00</published><updated>2021-09-27T00:00:00+09:00</updated><id>https://seongtaekkim.github.io/java-jeneric</id><content type="html" xml:base="https://seongtaekkim.github.io/java-jeneric">&lt;h2 id=&quot;jeneric&quot;&gt;jeneric&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://seongtaekkim.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" /><updated>2021-10-04T14:07:15+09:00</updated><id>https://seongtaekkim.github.io/feed.xml</id><title type="html">웹개발자</title><subtitle>IT</subtitle><entry><title type="html">Java Collection</title><link href="https://seongtaekkim.github.io/java-collection" rel="alternate" type="text/html" title="Java Collection" /><published>2021-09-27T00:00:00+09:00</published><updated>2021-09-27T00:00:00+09:00</updated><id>https://seongtaekkim.github.io/java-collection</id><content type="html" xml:base="https://seongtaekkim.github.io/java-collection">&lt;h1 id=&quot;collection&quot;&gt;Collection&lt;/h1&gt;
+
+&lt;h2 id=&quot;학습목표&quot;&gt;학습목표&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;구현 클래스 별 역할 학습&lt;/li&gt;
+  &lt;li&gt;구현 클래스에 적용된 자료구조 학습&lt;/li&gt;
+  &lt;li&gt;응용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://t1.daumcdn.net/cfile/tistory/99B88F3E5AC70FB419&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;참고&quot;&gt;참고&lt;/h4&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;https://gangnam-americano.tistory.com/41&lt;/p&gt;
+
+&lt;p&gt;https://reakwon.tistory.com/83?category=300670&lt;/p&gt;</content><author><name></name></author><summary type="html">Collection</summary></entry><entry><title type="html">Java Jeneric</title><link href="https://seongtaekkim.github.io/java-jeneric" rel="alternate" type="text/html" title="Java Jeneric" /><published>2021-09-27T00:00:00+09:00</published><updated>2021-09-27T00:00:00+09:00</updated><id>https://seongtaekkim.github.io/java-jeneric</id><content type="html" xml:base="https://seongtaekkim.github.io/java-jeneric">&lt;h2 id=&quot;jeneric&quot;&gt;jeneric&lt;/h2&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
@@ -896,7 +914,15 @@ null
 
 &lt;ul&gt;
   &lt;li&gt;ClassLoader 계층구조&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>seongtaekkim</name></author><category term="java" /><summary type="html">– JAVA CORE – JAVA CORE - JVM</summary></entry><entry><title type="html">스프링 따라하기</title><link href="https://seongtaekkim.github.io/springframework-architecture" rel="alternate" type="text/html" title="스프링 따라하기" /><published>2021-09-11T15:36:01+09:00</published><updated>2021-09-11T15:36:01+09:00</updated><id>https://seongtaekkim.github.io/springframework-architecture</id><content type="html" xml:base="https://seongtaekkim.github.io/springframework-architecture">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/built/images/java/rec1.png&quot; align=&quot;left&quot; height=&quot;250px&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/built/images/java/rec2.png&quot; align=&quot;left&quot; height=&quot;250px&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/built/images/java/rec3.png&quot; align=&quot;left&quot; height=&quot;250px&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/built/images/java/rec4.png&quot; align=&quot;left&quot; height=&quot;250px&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;</content><author><name>seongtaekkim</name></author><category term="java" /><summary type="html">– JAVA CORE – JAVA CORE - JVM</summary></entry><entry><title type="html">스프링 따라하기</title><link href="https://seongtaekkim.github.io/springframework-architecture" rel="alternate" type="text/html" title="스프링 따라하기" /><published>2021-09-11T15:36:01+09:00</published><updated>2021-09-11T15:36:01+09:00</updated><id>https://seongtaekkim.github.io/springframework-architecture</id><content type="html" xml:base="https://seongtaekkim.github.io/springframework-architecture">&lt;p&gt;&lt;span class=&quot;table-of-contents-list&quot;&gt;– 스프링 따라하기 –&lt;/span&gt;&lt;/p&gt;
 &lt;ul class=&quot;table-of-contents-list&quot;&gt;
     &lt;li&gt;&lt;a href=&quot;./springframework-remake&quot;&gt;springframework - 따라하기&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href=&quot;./springframework-architecture&quot;&gt;springframework - 아키텍처&lt;/a&gt;&lt;/li&gt;
