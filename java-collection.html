@@ -14,6 +14,25 @@
 
 <p>순서를 유지하지 않는 데이터의 집합으로 데이터의 중복을 허용하지 않는다.</p>
 
+<h3 id="hashset">HashSet</h3>
+
+<p>HashSet 내부를 보면,  HashMap으로 정의 되어 있는데 transient로 되어있다</p>
+
+<p>transient 는 Serialize하는 과정에 제외하고 싶은 경우 선언하는 키워드이다.</p>
+
+<ul>
+  <li>Serializable 를 구현한 class의 객체는 직렬화를 할 수 있다.</li>
+  <li>transient 키워드가 있는 변수는 직렬화 대상에서 제외되어, null값으로 존재한다.</li>
+</ul>
+
+<p>transient 참조</p>
+
+<p>https://nesoy.github.io/articles/2018-06/Java-transient</p>
+
+<p>직렬화(Serialize) 참조</p>
+
+<p>https://nesoy.github.io/articles/2018-04/Java-Serialize</p>
+
 <h4 id="참고">참고</h4>
 
 <hr />

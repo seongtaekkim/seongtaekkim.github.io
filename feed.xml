@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://seongtaekkim.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" /><updated>2021-10-05T05:42:33+09:00</updated><id>https://seongtaekkim.github.io/feed.xml</id><title type="html">웹개발자</title><subtitle>IT</subtitle><entry><title type="html">타임매직 느낀점</title><link href="https://seongtaekkim.github.io/timemagic" rel="alternate" type="text/html" title="타임매직 느낀점" /><published>2021-10-05T01:36:01+09:00</published><updated>2021-10-05T01:36:01+09:00</updated><id>https://seongtaekkim.github.io/timemagic</id><content type="html" xml:base="https://seongtaekkim.github.io/timemagic">&lt;h1 id=&quot;time-magic---리-코커렐&quot;&gt;TIME MAGIC - 리 코커렐&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://seongtaekkim.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://seongtaekkim.github.io/" rel="alternate" type="text/html" /><updated>2021-10-06T04:17:44+09:00</updated><id>https://seongtaekkim.github.io/feed.xml</id><title type="html">웹개발자</title><subtitle>IT</subtitle><entry><title type="html">타임매직 느낀점</title><link href="https://seongtaekkim.github.io/timemagic" rel="alternate" type="text/html" title="타임매직 느낀점" /><published>2021-10-05T01:36:01+09:00</published><updated>2021-10-05T01:36:01+09:00</updated><id>https://seongtaekkim.github.io/timemagic</id><content type="html" xml:base="https://seongtaekkim.github.io/timemagic">&lt;h1 id=&quot;time-magic---리-코커렐&quot;&gt;TIME MAGIC - 리 코커렐&lt;/h1&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;느낀점&quot;&gt;느낀점&lt;/h4&gt;
@@ -567,6 +567,25 @@
 &lt;h2 id=&quot;set&quot;&gt;Set&lt;/h2&gt;
 
 &lt;p&gt;순서를 유지하지 않는 데이터의 집합으로 데이터의 중복을 허용하지 않는다.&lt;/p&gt;
+
+&lt;h3 id=&quot;hashset&quot;&gt;HashSet&lt;/h3&gt;
+
+&lt;p&gt;HashSet 내부를 보면,  HashMap으로 정의 되어 있는데 transient로 되어있다&lt;/p&gt;
+
+&lt;p&gt;transient 는 Serialize하는 과정에 제외하고 싶은 경우 선언하는 키워드이다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Serializable 를 구현한 class의 객체는 직렬화를 할 수 있다.&lt;/li&gt;
+  &lt;li&gt;transient 키워드가 있는 변수는 직렬화 대상에서 제외되어, null값으로 존재한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;transient 참조&lt;/p&gt;
+
+&lt;p&gt;https://nesoy.github.io/articles/2018-06/Java-transient&lt;/p&gt;
+
+&lt;p&gt;직렬화(Serialize) 참조&lt;/p&gt;
+
+&lt;p&gt;https://nesoy.github.io/articles/2018-04/Java-Serialize&lt;/p&gt;
 
 &lt;h4 id=&quot;참고&quot;&gt;참고&lt;/h4&gt;
 
