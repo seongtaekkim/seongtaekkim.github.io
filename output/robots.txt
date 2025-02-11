@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /privateData/
-
-Sitemap: https://seongtaekkim.github.io/sitemap.xml
