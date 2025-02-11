@@ -1,0 +1,392 @@
+<h3 id="cloudformation-으로-aws-구조-설치">cloudformation 으로 aws 구조 설치</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws cloudformation deploy <span class="nt">--template-file</span> ./myeks.yaml <span class="se">\</span>
+     <span class="nt">--stack-name</span> myeks <span class="nt">--parameter-overrides</span> <span class="nv">KeyName</span><span class="o">=</span>container <span class="nv">SgIngressSshCidr</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">-s</span> ipinfo.io/ip<span class="si">)</span>/32 <span class="nt">--region</span> ap-northeast-2
+     
+     
+<span class="c">## ssh 접속</span>
+
+ssh root@<span class="si">$(</span>aws cloudformation describe-stacks <span class="nt">--stack-name</span> myeks <span class="nt">--query</span> <span class="s1">'Stacks[*].Outputs[0].OutputValue'</span> <span class="nt">--output</span> text<span class="si">)</span>
+root@@X.Y.Z.A<span class="s1">'s password: qwe123
+</span></code></pre></div></div>
+
+<h3 id="베스천-자격증명-확인">베스천 자격증명 확인</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@myeks-host ~]# aws configure
+AWS Access Key ID <span class="o">[</span>None]: A<span class="k">*************</span>
+AWS Secret Access Key <span class="o">[</span>None]: wiN<span class="k">***</span>zxq4/<span class="k">******************</span>
+Default region name <span class="o">[</span>None]: ap-northeast-2
+Default output format <span class="o">[</span>None]:
+<span class="o">[</span>root@myeks-host ~]#
+<span class="o">[</span>root@myeks-host ~]# aws sts  get-caller-identity
+<span class="o">{</span>
+    <span class="s2">"UserId"</span>: <span class="s2">"A*************"</span>,
+    <span class="s2">"Account"</span>: <span class="s2">"73*********"</span>,
+    <span class="s2">"Arn"</span>: <span class="s2">"arn:aws:iam::73*********"</span>,:user/Administrator<span class="s2">"
+}
+</span></code></pre></div></div>
+
+<ul>
+  <li>기본 정보 확인</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># (옵션) cloud-init 실행 과정 로그 확인</span>
+<span class="nb">tail</span> <span class="nt">-f</span> /var/log/cloud-init-output.log
+
+<span class="c"># 사용자 확인</span>
+<span class="nb">whoami</span>
+
+<span class="c"># 기본 툴 및 SSH 키 설치 등 확인</span>
+<span class="k">**</span>kubectl version <span class="nt">--client</span><span class="o">=</span><span class="nb">true</span> <span class="nt">-o</span> yaml<span class="k">**</span>
+<span class="k">**</span>eksctl version<span class="k">**</span>
+<span class="k">**</span>aws <span class="nt">--version</span><span class="k">**</span>
+<span class="k">**</span><span class="nb">ls</span> /root/.ssh/id_rsa<span class="k">***</span>
+
+<span class="c"># 도커 엔진 설치 확인</span>
+<span class="k">**</span>docker info<span class="k">**</span>
+</code></pre></div></div>
+
+<ul>
+  <li>IAM User 자격 증명 설정 및 VPC 확인 및 <strong>변수 지정</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># EKS 배포할 VPC 정보 확인</span>
+<span class="k">**</span>aws ec2 describe-vpcs <span class="nt">--filters</span> <span class="s2">"Name=tag:Name,Values=</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-VPC"</span> | jq<span class="k">**</span>
+aws ec2 describe-vpcs <span class="nt">--filters</span> <span class="s2">"Name=tag:Name,Values=</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-VPC"</span> | jq Vpcs[]
+aws ec2 describe-vpcs <span class="nt">--filters</span> <span class="s2">"Name=tag:Name,Values=</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-VPC"</span> | jq Vpcs[].VpcId
+aws ec2 describe-vpcs <span class="nt">--filters</span> <span class="s2">"Name=tag:Name,Values=</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-VPC"</span> | jq <span class="nt">-r</span> .Vpcs[].VpcId
+<span class="k">**</span><span class="nb">export </span><span class="nv">VPCID</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-vpcs <span class="nt">--filters</span> <span class="s2">"Name=tag:Name,Values=</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-VPC"</span> | jq <span class="nt">-r</span> .Vpcs[].VpcId<span class="si">)</span>
+<span class="nb">echo</span> <span class="s2">"export VPCID=</span><span class="nv">$VPCID</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> /etc/profile<span class="k">**</span>
+<span class="nb">echo</span> <span class="nv">$VPCID</span>
+
+<span class="k">****</span><span class="c"># EKS 배포할 VPC에 속한 Subnet 정보 확인</span>
+aws ec2 describe-subnets <span class="nt">--filters</span> <span class="s2">"Name=vpc-id,Values=</span><span class="nv">$VPCID</span><span class="s2">"</span> <span class="nt">--output</span> json | jq
+aws ec2 describe-subnets <span class="nt">--filters</span> <span class="s2">"Name=vpc-id,Values=</span><span class="nv">$VPCID</span><span class="s2">"</span> <span class="nt">--output</span> yaml
+
+<span class="k">****</span><span class="c">## 퍼블릭 서브넷 ID 확인</span>
+<span class="k">**</span>aws ec2 describe-subnets <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>tag:Name,Values<span class="o">=</span><span class="s2">"</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-PublicSubnet1"</span> | jq<span class="k">**</span>
+aws ec2 describe-subnets <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>tag:Name,Values<span class="o">=</span><span class="s2">"</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-PublicSubnet1"</span> <span class="nt">--query</span> <span class="s2">"Subnets[0].[SubnetId]"</span> <span class="nt">--output</span> text
+<span class="k">**</span><span class="nb">export </span><span class="nv">PubSubnet1</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-subnets <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>tag:Name,Values<span class="o">=</span><span class="s2">"</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-PublicSubnet1"</span> <span class="nt">--query</span> <span class="s2">"Subnets[0].[SubnetId]"</span> <span class="nt">--output</span> text<span class="si">)</span>
+<span class="nb">export </span><span class="nv">PubSubnet2</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-subnets <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>tag:Name,Values<span class="o">=</span><span class="s2">"</span><span class="nv">$CLUSTER_NAME</span><span class="s2">-PublicSubnet2"</span> <span class="nt">--query</span> <span class="s2">"Subnets[0].[SubnetId]"</span> <span class="nt">--output</span> text<span class="si">)</span>
+<span class="nb">echo</span> <span class="s2">"export PubSubnet1=</span><span class="nv">$PubSubnet1</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> /etc/profile
+<span class="nb">echo</span> <span class="s2">"export PubSubnet2=</span><span class="nv">$PubSubnet2</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> /etc/profile<span class="k">**</span>
+<span class="nb">echo</span> <span class="nv">$PubSubnet1</span>
+<span class="nb">echo</span> <span class="nv">$PubSubnet2</span>
+</code></pre></div></div>
+
+<h3 id="관리형-노드-설치">관리형 노드 설치</h3>
+
+<p>컨트롤플레인 설치</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 변수 확인***</span>
+<span class="nb">echo</span> <span class="nv">$AWS_DEFAULT_REGION</span>
+<span class="nb">echo</span> <span class="nv">$CLUSTER_NAME</span>
+<span class="nb">echo</span> <span class="nv">$VPCID</span>
+<span class="nb">echo</span> <span class="nv">$PubSubnet1</span>,<span class="nv">$PubSubnet2</span>
+
+<span class="c"># 옵션 [터미널1] EC2 생성 모니터링</span>
+<span class="k">**while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>aws ec2 describe-instances <span class="nt">--query</span> <span class="s2">"Reservations[*].Instances[*].{PublicIPAdd:PublicIpAddress,PrivateIPAdd:PrivateIpAddress,InstanceName:Tags[?Key=='Name']|[0].Value,Status:State.Name}"</span> <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running <span class="nt">--output</span> text <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done**</span>
+aws ec2 describe-instances <span class="nt">--query</span> <span class="s2">"Reservations[*].Instances[*].{PublicIPAdd:PublicIpAddress,PrivateIPAdd:PrivateIpAddress,InstanceName:Tags[?Key=='Name']|[0].Value,Status:State.Name}"</span> <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running <span class="nt">--output</span> table
+
+<span class="c"># eks 클러스터 &amp; 관리형노드그룹 배포 전 정보 확인</span>
+<span class="k">**</span>eksctl create cluster <span class="nt">--name</span> <span class="nv">$CLUSTER_NAME</span> <span class="nt">--region</span><span class="o">=</span><span class="nv">$AWS_DEFAULT_REGION</span> <span class="nt">--nodegroup-name</span><span class="o">=</span><span class="nv">$CLUSTER_NAME</span><span class="nt">-nodegroup</span> <span class="nt">--node-type</span><span class="o">=</span>t3.medium <span class="se">\\</span>
+<span class="nt">--node-volume-size</span><span class="o">=</span>30 <span class="nt">--vpc-public-subnets</span> <span class="s2">"</span><span class="nv">$PubSubnet1</span><span class="s2">,</span><span class="nv">$PubSubnet2</span><span class="s2">"</span> <span class="nt">--version</span> 1.31 <span class="nt">--ssh-access</span> <span class="nt">--external-dns-access</span> <span class="nt">--dry-run</span><span class="k">**</span> | yh
+<span class="k">****</span>...
+<span class="k">**</span>vpc<span class="k">**</span>:
+  autoAllocateIPv6: <span class="nb">false
+  </span>cidr: 192.168.0.0/16
+  clusterEndpoints:
+    privateAccess: <span class="nb">false
+    </span>publicAccess: <span class="nb">true</span>
+  <span class="k">**</span><span class="nb">id</span><span class="k">**</span>: vpc-0505d154771a3dfdf
+  manageSharedNodeSecurityGroupRules: <span class="nb">true
+  </span>nat:
+    gateway: Disable
+  <span class="k">**</span>subnets<span class="k">**</span>:
+    <span class="k">**</span>public<span class="k">**</span>:
+      ap-northeast-2a:
+        az: ap-northeast-2a
+        cidr: 192.168.1.0/24
+        <span class="nb">id</span>: subnet-0d98bee5a7c0dfcc6
+      ap-northeast-2c:
+        az: ap-northeast-2c
+        cidr: 192.168.2.0/24
+        <span class="nb">id</span>: subnet-09dc49de8d899aeb7
+<span class="k">****</span>
+<span class="k">**</span><span class="c"># eks 클러스터 &amp; 관리형노드그룹 배포: 총 15분 소요**</span>
+<span class="k">**</span>eksctl create cluster <span class="nt">--name</span> <span class="nv">$CLUSTER_NAME</span> <span class="nt">--region</span><span class="o">=</span><span class="nv">$AWS_DEFAULT_REGION</span> <span class="nt">--nodegroup-name</span><span class="o">=</span><span class="nv">$CLUSTER_NAME</span><span class="nt">-nodegroup</span> <span class="nt">--node-type</span><span class="o">=</span>t3.medium <span class="se">\\</span>
+<span class="nt">--node-volume-size</span><span class="o">=</span>30 <span class="nt">--vpc-public-subnets</span> <span class="s2">"</span><span class="nv">$PubSubnet1</span><span class="s2">,</span><span class="nv">$PubSubnet2</span><span class="s2">"</span> <span class="nt">--version</span> 1.31 <span class="nt">--ssh-access</span> <span class="nt">--external-dns-access</span> <span class="nt">--verbose</span> 4<span class="k">**</span>
+...
+023-04-23 01:32:22 <span class="o">[</span>▶]  setting current-context to admin@myeks.ap-northeast-2.eksctl.io
+2023-04-23 01:32:22 <span class="o">[</span>✔]  <span class="k">**</span>saved kubeconfig as <span class="s2">"/root/.kube/config"</span><span class="k">**</span>
+...
+</code></pre></div></div>
+
+<p>설치 로그확인</p>
+
+<p><img src="/img/eks-002.png" alt="" /></p>
+
+<p><img src="/img/eks-003.png" alt="" /></p>
+
+<p>접속확인</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 노드 IP 확인 및 PrivateIP 변수 지정</span>
+aws ec2 describe-instances <span class="nt">--query</span> <span class="s2">"Reservations[*].Instances[*].{PublicIPAdd:PublicIpAddress,PrivateIPAdd:PrivateIpAddress,InstanceName:Tags[?Key=='Name']|[0].Value,Status:State.Name}"</span> <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running <span class="nt">--output</span> table
+kubectl get node <span class="nt">--label-columns</span><span class="o">=</span>topology.kubernetes.io/zone
+kubectl get node <span class="nt">--label-columns</span><span class="o">=</span>topology.kubernetes.io/zone <span class="nt">--selector</span><span class="o">=</span>topology.kubernetes.io/zone<span class="o">=</span>ap-northeast-2a
+kubectl get node <span class="nt">--label-columns</span><span class="o">=</span>topology.kubernetes.io/zone <span class="nt">--selector</span><span class="o">=</span>topology.kubernetes.io/zone<span class="o">=</span>ap-northeast-2c
+<span class="k">**</span><span class="nv">N1</span><span class="o">=</span><span class="si">$(</span><span class="k">**</span>kubectl get node <span class="nt">--label-columns</span><span class="o">=</span>topology.kubernetes.io/zone <span class="nt">--selector</span><span class="o">=</span>topology.kubernetes.io/zone<span class="o">=</span>ap-northeast-2a <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">={</span>.items[0].status.addresses[0].address<span class="o">}</span><span class="si">)</span>
+<span class="k">**</span><span class="nv">N2</span><span class="o">=</span><span class="nv">$*</span><span class="k">*</span><span class="o">(</span>kubectl get node <span class="nt">--label-columns</span><span class="o">=</span>topology.kubernetes.io/zone <span class="nt">--selector</span><span class="o">=</span>topology.kubernetes.io/zone<span class="o">=</span>ap-northeast-2c <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">={</span>.items[0].status.addresses[0].address<span class="o">})</span>
+<span class="k">****</span><span class="nb">echo</span> <span class="nv">$N1</span>, <span class="nv">$N2</span>
+<span class="nb">echo</span> <span class="s2">"export N1=</span><span class="nv">$N1</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> /etc/profile
+<span class="nb">echo</span> <span class="s2">"export N2=</span><span class="nv">$N2</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> /etc/profile
+
+<span class="c"># eksctl-host 에서 노드의IP나 coredns 파드IP로 ping 테스트</span>
+ping &lt;IP&gt;
+ping <span class="nt">-c</span> 1 <span class="nv">$N1</span>
+ping <span class="nt">-c</span> 1 <span class="nv">$N2</span>
+
+<span class="c"># 노드 보안그룹 ID 확인</span>
+aws ec2 describe-security-groups <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span><span class="k">*</span>nodegroup<span class="k">*</span> <span class="nt">--query</span> <span class="s2">"SecurityGroups[*].[GroupId]"</span> <span class="nt">--output</span> text
+<span class="nv">NGSGID</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-security-groups <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span><span class="k">*</span>nodegroup<span class="k">*</span> <span class="nt">--query</span> <span class="s2">"SecurityGroups[*].[GroupId]"</span> <span class="nt">--output</span> text<span class="si">)</span>
+<span class="nb">echo</span> <span class="nv">$NGSGID</span>
+<span class="nb">echo</span> <span class="s2">"export NGSGID=</span><span class="nv">$NGSGID</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> /etc/profile
+
+<span class="c"># 노드 보안그룹에 eksctl-host 에서 노드(파드)에 접속 가능하게 룰(Rule) 추가 설정</span>
+aws ec2 authorize-security-group-ingress <span class="nt">--group-id</span> <span class="nv">$NGSGID</span> <span class="nt">--protocol</span> <span class="s1">'-1'</span> <span class="nt">--cidr</span> <span class="k">**</span>192.168.1.100/32<span class="k">**</span>
+
+<span class="c"># eksctl-host 에서 노드의IP나 coredns 파드IP로 ping 테스트</span>
+ping <span class="nt">-c</span> 2 <span class="nv">$N1</span>
+ping <span class="nt">-c</span> 2 <span class="nv">$N2</span>
+
+<span class="c"># 워커 노드 SSH 접속</span>
+<span class="k">**</span>ssh <span class="nt">-i</span> ~/.ssh/id_rsa <span class="nt">-o</span> <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no ec2-user@<span class="nv">$N1</span> <span class="nb">hostname
+</span>ssh <span class="nt">-i</span> ~/.ssh/id_rsa <span class="nt">-o</span> <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no ec2-user@<span class="nv">$N2</span> <span class="nb">hostname</span><span class="k">**</span>
+<span class="k">**</span>ssh ec2-user@<span class="nv">$N1</span>
+<span class="nb">exit</span><span class="k">**</span>
+<span class="k">**</span>ssh ec2-user@<span class="nv">$N2</span>
+<span class="nb">exit</span><span class="k">**</span>
+</code></pre></div></div>
+
+<h2 id="aws-api-서버-엔드포인트-엑세스">AWS API 서버 엔드포인트 엑세스</h2>
+
+<p><img src="/img/eks-004.png" alt="" /></p>
+
+<h3 id="public">public</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>dig +short <span class="nv">$APIDNS</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">date</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done</span>
+<span class="nt">------------------------------</span>
+2025. 02. 09. <span class="o">(</span>일<span class="o">)</span> 01:40:42 KST
+15.164.132.1
+3.38.114.154
+</code></pre></div></div>
+
+<p>kubelet과 kube-proxy의 엔드포인트는 공인아이피로 되어있다.
+(즉, 컨트롤 플레인과 노드 통신(kubelet,  kube-proxy)이 일어날 때 항상 공인아이피로 송수신된다는 것.)</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>ssh ec2-user@<span class="nv">$N1</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="p">;</span> ssh ec2-user@<span class="nv">$N2</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">date</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done
+
+</span>2025. 02. 09. <span class="o">(</span>일<span class="o">)</span> 01:40:59 KST
+ESTAB 0      0               192.168.1.170:36268           15.164.132.1:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2894,fd<span class="o">=</span>26<span class="o">))</span>
+ESTAB 0      0               192.168.1.170:55092           3.38.114.154:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kube-proxy"</span>,pid<span class="o">=</span>3113,fd<span class="o">=</span>9<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.1.170]:10250 <span class="o">[</span>::ffff:192.168.2.122]:47200 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2894,fd<span class="o">=</span>12<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.1.170]:10250 <span class="o">[</span>::ffff:192.168.2.156]:52132 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2894,fd<span class="o">=</span>20<span class="o">))</span>
+
+ESTAB 0      0               192.168.2.244:34406           3.38.114.154:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kube-proxy"</span>,pid<span class="o">=</span>3114,fd<span class="o">=</span>9<span class="o">))</span>
+ESTAB 0      0               192.168.2.244:53726           15.164.132.1:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2892,fd<span class="o">=</span>26<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.2.244]:10250 <span class="o">[</span>::ffff:192.168.2.156]:37720 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2892,fd<span class="o">=</span>24<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.2.244]:10250 <span class="o">[</span>::ffff:192.168.2.122]:48800 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2892,fd<span class="o">=</span>12<span class="o">))</span>
+<span class="nt">------------------------------</span>
+</code></pre></div></div>
+
+<h3 id="public--private">public &amp; private</h3>
+
+<p><img src="/img/eks-005.png" alt="" /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws eks update-cluster-config <span class="nt">--region</span> <span class="nv">$AWS_DEFAULT_REGION</span> <span class="nt">--name</span> <span class="nv">$CLUSTER_NAME</span> <span class="nt">--resources-vpc-config</span> <span class="nv">endpointPublicAccess</span><span class="o">=</span><span class="nb">true</span>,publicAccessCidrs<span class="o">=</span><span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-s</span> ipinfo.io/ip<span class="si">)</span><span class="s2">/32"</span>,endpointPrivateAccess<span class="o">=</span><span class="nb">true</span>
+<span class="o">{</span>
+    <span class="s2">"update"</span>: <span class="o">{</span>
+        <span class="s2">"id"</span>: <span class="s2">"7e6c1d1e-0020-34a9-90f7-645628f32752"</span>,
+        <span class="s2">"status"</span>: <span class="s2">"InProgress"</span>,
+        <span class="s2">"type"</span>: <span class="s2">"EndpointAccessUpdate"</span>,
+        <span class="s2">"params"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"type"</span>: <span class="s2">"EndpointPublicAccess"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"true"</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"type"</span>: <span class="s2">"EndpointPrivateAccess"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"true"</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"type"</span>: <span class="s2">"PublicAccessCidrs"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"[</span><span class="se">\"</span><span class="s2">13.125.166.72/32</span><span class="se">\"</span><span class="s2">]"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"createdAt"</span>: <span class="s2">"2025-02-09T01:40:33.081000+09:00"</span>,
+        <span class="s2">"errors"</span>: <span class="o">[]</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>dig +short <span class="nv">$APIDNS</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">date</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done</span>
+<span class="nt">------------------------------</span>
+2025. 02. 09. <span class="o">(</span>일<span class="o">)</span> 01:40:42 KST
+15.164.132.1
+3.38.114.154
+</code></pre></div></div>
+
+<p>kubelet과 kube-proxy의 엔드포인트는 공인아이피로 되어있다.
+(즉, 컨트롤 플레인과 노드 통신(kubelet,  kube-proxy)이 일어날 때 항상 공인아이피로 송수신된다는 것.)</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>ssh ec2-user@<span class="nv">$N1</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="p">;</span> ssh ec2-user@<span class="nv">$N2</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">date</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done
+
+</span>2025. 02. 09. <span class="o">(</span>일<span class="o">)</span> 01:40:59 KST
+ESTAB 0      0               192.168.1.170:36268           15.164.132.1:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2894,fd<span class="o">=</span>26<span class="o">))</span>
+ESTAB 0      0               192.168.1.170:55092           3.38.114.154:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kube-proxy"</span>,pid<span class="o">=</span>3113,fd<span class="o">=</span>9<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.1.170]:10250 <span class="o">[</span>::ffff:192.168.2.122]:47200 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2894,fd<span class="o">=</span>12<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.1.170]:10250 <span class="o">[</span>::ffff:192.168.2.156]:52132 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2894,fd<span class="o">=</span>20<span class="o">))</span>
+
+ESTAB 0      0               192.168.2.244:34406           3.38.114.154:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kube-proxy"</span>,pid<span class="o">=</span>3114,fd<span class="o">=</span>9<span class="o">))</span>
+ESTAB 0      0               192.168.2.244:53726           15.164.132.1:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2892,fd<span class="o">=</span>26<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.2.244]:10250 <span class="o">[</span>::ffff:192.168.2.156]:37720 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2892,fd<span class="o">=</span>24<span class="o">))</span>
+ESTAB 0      0      <span class="o">[</span>::ffff:192.168.2.244]:10250 <span class="o">[</span>::ffff:192.168.2.122]:48800 <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>2892,fd<span class="o">=</span>12<span class="o">))</span>
+<span class="nt">------------------------------</span>
+</code></pre></div></div>
+
+<p>위 결과 public &amp; private 으로 변경되는데, 베스천에서 kubctl 명령어가 더이상 실행되지 않는다.
+왜냐하면 EKS owned ENI 형태로 관리되는 ENI의 시큐리티그룹에 베스천에 대한 인바운드 설정을 해놓지 않았기에 통신이 되지 않는다. (아래와 같이 처리하면 됨)</p>
+
+<p>ControlPlaneSecurityGroup을 찾고, 베스천 Ip 인바운드를 Expose한다</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CPSGID</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-security-groups <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span><span class="k">*</span>ControlPlaneSecurityGroup<span class="k">*</span> <span class="nt">--query</span> <span class="s2">"SecurityGroups[*].[GroupId]"</span> <span class="nt">--output</span> text<span class="si">)</span>
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ec2 authorize-security-group-ingress <span class="nt">--group-id</span> <span class="nv">$CPSGID</span> <span class="nt">--protocol</span> <span class="s1">'-1'</span> <span class="nt">--cidr</span> 192.168.1.100/32
+
+<span class="o">{</span>
+    <span class="s2">"Return"</span>: <span class="nb">true</span>,
+    <span class="s2">"SecurityGroupRules"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"SecurityGroupRuleId"</span>: <span class="s2">"sgr-0e61ded354b5415b0"</span>,
+            <span class="s2">"GroupId"</span>: <span class="s2">"sg-0e301754ec8ac3212"</span>,
+            <span class="s2">"GroupOwnerId"</span>: <span class="s2">"738612635754"</span>,
+            <span class="s2">"IsEgress"</span>: <span class="nb">false</span>,
+            <span class="s2">"IpProtocol"</span>: <span class="s2">"-1"</span>,
+            <span class="s2">"FromPort"</span>: <span class="nt">-1</span>,
+            <span class="s2">"ToPort"</span>: <span class="nt">-1</span>,
+            <span class="s2">"CidrIpv4"</span>: <span class="s2">"192.168.1.100/32"</span>,
+            <span class="s2">"SecurityGroupRuleArn"</span>: <span class="s2">"arn:aws:ec2:ap-northeast-2:738612635754:security-group-rule/sgr-0e61ded354b5415b0"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>dig +short $APIDNS</li>
+  <li>dig 결과가 컨트롤 플레인에서 관리하는 사설아이피가 조회되기 시작한다.</li>
+  <li>이는, 데이터플레인과의 통신이 aws 내부적으로 일어난다는 의미</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">------------------------------</span>
+2025. 02. 09. <span class="o">(</span>일<span class="o">)</span> 01:56:05 KST
+192.168.1.152
+192.168.2.82
+</code></pre></div></div>
+
+<ul>
+  <li>node dns 역시 internal로 변경됨</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get node <span class="nt">-v</span><span class="o">=</span>6
+I0209 01:58:11.886004   18989 loader.go:395] Config loaded from file:  /root/.kube/config
+I0209 01:58:12.857831   18989 round_trippers.go:553] GET https://4049728AFEB8F9CEA17AA2E19BD71657.gr7.ap-northeast-2.eks.amazonaws.com/api/v1/nodes?limit<span class="o">=</span>500 200 OK <span class="k">in </span>961 milliseconds
+NAME                                               STATUS   ROLES    AGE   VERSION
+ip-192-168-1-170.ap-northeast-2.compute.internal   Ready    &lt;none&gt;   99m   v1.31.4-eks-aeac579
+ip-192-168-2-244.ap-northeast-2.compute.internal   Ready    &lt;none&gt;   99m   v1.31.4-eks-aeac579
+</code></pre></div></div>
+
+<ul>
+  <li>실제 통신은, 아래와같이 재실행 이후 적용됨을 확인</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 모니터링 : tcp peer 정보 변화 확인</span>
+<span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>ssh ec2-user@<span class="nv">$N1</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="p">;</span> ssh ec2-user@<span class="nv">$N2</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">date</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done</span>
+
+<span class="c"># kube-proxy rollout</span>
+kubectl rollout restart ds/kube-proxy <span class="nt">-n</span> kube-system
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>ssh ec2-user@<span class="nv">$N1</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="p">;</span> ssh ec2-user@<span class="nv">$N2</span> <span class="nb">sudo </span>ss <span class="nt">-tnp</span> | egrep <span class="s1">'kubelet|kube-proxy'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s2">"------------------------------"</span> <span class="p">;</span> <span class="nb">date</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="k">done
+
+</span>ESTAB 0      0      192.168.1.170:44346  192.168.2.82:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>60428,fd<span class="o">=</span>9<span class="o">))</span>
+ESTAB 0      0      192.168.1.170:57082 192.168.1.152:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kube-proxy"</span>,pid<span class="o">=</span>60264,fd<span class="o">=</span>9<span class="o">))</span>
+
+ESTAB 0      0      192.168.2.244:51864 192.168.1.152:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kube-proxy"</span>,pid<span class="o">=</span>59674,fd<span class="o">=</span>9<span class="o">))</span>
+ESTAB 0      0      192.168.2.244:54588  192.168.2.82:443   <span class="nb">users</span>:<span class="o">((</span><span class="s2">"kubelet"</span>,pid<span class="o">=</span>59859,fd<span class="o">=</span>12<span class="o">))</span>
+</code></pre></div></div>
+
+<h3 id="허용아이피를-삭제하면-">허용아이피를 삭제하면 ?</h3>
+
+<ul>
+  <li>
+    <p>당연히 kubectl api 통신은 된다. 애초에 데이터플레인 이 있는 서브넷에 속해있기 때문에 EKS owned ENI 을 통해 통신하고 있었기에, 허용아이피와는 무관하다. (private 모드에서 통신 가능)</p>
+  </li>
+  <li>
+    <p>다른 작업공간에서 kubectl 통신이 필요하다면, aws 자격증명 후에
+<code class="language-plaintext highlighter-rouge">aws eks update-kubeconfig --region ap-northeast-2 --name myeks</code> 와 같이 eks 접근정보를 작성하면
+통신이 가능하다.</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  .kube kubectl get nodes
+NAME                                               STATUS   ROLES    AGE    VERSION
+ip-192-168-1-170.ap-northeast-2.compute.internal   Ready    &lt;none&gt;   136m   v1.31.4-eks-aeac579
+ip-192-168-2-244.ap-northeast-2.compute.internal   Ready    &lt;none&gt;   136m   v1.31.4-eks-aeac579
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="private">private</h3>
+
+<ul>
+  <li>EKS 클러스터의 API 엔드포인트가 사설 IP(프라이빗 IP)만 사용하도록 설정됨</li>
+  <li>EKS가 관리하는 ENI(Elastic Network Interface)에 사설 IP가 할당되어, 해당 EKS Control Plane이 위치한 서브넷 내에서만 접근이 가능</li>
+  <li>VPC 내부나 해당 VPC와 연결된 네트워크(예: VPN, Direct Connect)에서만 API 서버로 통신할 수 있다.</li>
+</ul>
+
+<p><img src="/img/eks-006.png" alt="" /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws eks update-cluster-config <span class="se">\</span>
+  <span class="nt">--region</span> <span class="nv">$AWS_DEFAULT_REGION</span> <span class="se">\</span>
+  <span class="nt">--name</span> <span class="nv">$CLUSTER_NAME</span> <span class="se">\</span>
+  <span class="nt">--resources-vpc-config</span> <span class="nv">endpointPublicAccess</span><span class="o">=</span><span class="nb">false</span>,endpointPrivateAccess<span class="o">=</span><span class="nb">true</span>
+  
+  <span class="o">{</span>
+    <span class="s2">"update"</span>: <span class="o">{</span>
+        <span class="s2">"id"</span>: <span class="s2">"b7526d2d-3009-3f5e-ab64-2c255053dcf4"</span>,
+        <span class="s2">"status"</span>: <span class="s2">"InProgress"</span>,
+        <span class="s2">"type"</span>: <span class="s2">"EndpointAccessUpdate"</span>,
+        <span class="s2">"params"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"type"</span>: <span class="s2">"EndpointPublicAccess"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"false"</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"type"</span>: <span class="s2">"EndpointPrivateAccess"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"true"</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"type"</span>: <span class="s2">"PublicAccessCidrs"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"[</span><span class="se">\"</span><span class="s2">13.125.166.72/32</span><span class="se">\"</span><span class="s2">]"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"createdAt"</span>: <span class="s2">"2025-02-09T02:03:37.283000+09:00"</span>,
+        <span class="s2">"errors"</span>: <span class="o">[]</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>당연하게도 public &amp; private 모드에서 설정했던 로컬 작업Pc에서의 kubectl 통신은 불가하다. (proxy server는 사설아이피 대역으로 엔드포인트를 제공하기 때문)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># kubectl get nodes
+Unable to connect to the server: dial tcp 192.168.2.82:443: i/o timeout
+</code></pre></div></div>
+

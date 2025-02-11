@@ -1,0 +1,160 @@
+<h3 id="노드에-배포된-컨테이너-정보-확인-containerd-clients-3종--ctr-nerdctl-crictl">노드에 배포된 컨테이너 정보 확인 Containerd clients 3종 : ctr, nerdctl, crictl</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(Administrator@myeks:N/A) [root@myeks-host ~]# ssh ec2-user@$N1 ctr --version
+
+ctr github.com/containerd/containerd 1.7.25
+(Administrator@myeks:N/A) [root@myeks-host ~]# ssh ec2-user@$N1 ctr
+NAME:
+   ctr -
+        __
+  _____/ /______
+ / ___/ __/ ___/
+/ /__/ /_/ /
+\___/\__/_/
+
+containerd CLI
+
+
+# 네임스페이스 확인
+ssh ec2-user@$N1 sudo ctr ns list
+NAME   LABELS
+k8s.io
+
+# 컨테이너 리스트 확인
+for i in $N1 $N2; do echo "&gt;&gt; node $i &lt;&lt;"; ssh ec2-user@$i sudo ctr -n k8s.io container list; echo; done
+CONTAINER                                                           IMAGE                                                                                          RUNTIME
+28b6a15c475e32cd8777c1963ba684745573d0b6053f80d2d37add0ae841eb45    602401143452.dkr.ecr-fips.us-east-1.amazonaws.com/eks/pause:3.5                                io.containerd.runc.v2
+4f266ebcee45b133c527df96499e01ec0c020ea72785eb10ef63b20b5826cf7c    602401143452.dkr.ecr-fips.us-east-1.amazonaws.com/eks/pause:3.5                                io.containerd.runc.v2
+...
+
+# 컨테이너 이미지 확인
+for i in $N1 $N2; do echo "&gt;&gt; node $i &lt;&lt;"; ssh ec2-user@$i sudo ctr -n k8s.io image list --quiet; echo; done
+...
+
+# 태스크 리스트 확인
+for i in $N1 $N2; do echo "&gt;&gt; node $i &lt;&lt;"; ssh ec2-user@$i sudo ctr -n k8s.io task list; echo; done
+...
+
+## 예시) 각 테스크의 PID(3706) 확인
+ssh ec2-user@$N1 sudo ps -c 3706
+PID CLS PRI TTY      STAT   TIME COMMAND
+3099 TS   19 ?       Ssl    0:01 kube-proxy --v=2 --config=/var/lib/kube-proxy-config/config --hostname-override=ip-192-168-1-229.ap-northeast-2.compute.internal
+</code></pre></div></div>
+
+<h4 id="ecr-퍼블릭-repository-사용--퍼블릭-repo-는-설정-시-us-east-1-를-사용">ECR 퍼블릭 Repository 사용 : 퍼블릭 Repo 는 설정 시 us-east-1 를 사용</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 퍼블릭 ECR 인증</span>
+aws ecr-public get-login-password <span class="nt">--region</span> us-east-1 | docker login <span class="nt">--username</span> AWS <span class="nt">--password-stdin</span> public.ecr.aws
+
+<span class="nb">cat</span> /root/.docker/config.json | jq
+
+<span class="c"># 퍼블릭 Repo 기본 정보 확인</span>
+aws ecr-public describe-registries <span class="nt">--region</span> us-east-1 | jq
+
+<span class="o">{</span>
+  <span class="s2">"registries"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"registryId"</span>: <span class="s2">"738612635754"</span>,
+      <span class="s2">"registryArn"</span>: <span class="s2">"arn:aws:ecr-public::738612635754:registry/738612635754"</span>,
+      <span class="s2">"registryUri"</span>: <span class="s2">""</span>,
+      <span class="s2">"verified"</span>: <span class="nb">false</span>,
+      <span class="s2">"aliases"</span>: <span class="o">[]</span>
+    <span class="o">}</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+
+<span class="c"># 퍼블릭 Repo 생성</span>
+<span class="nv">NICKNAME</span><span class="o">=</span>seongtki
+aws ecr-public create-repository <span class="nt">--repository-name</span> <span class="nv">$NICKNAME</span>/nginx <span class="nt">--region</span> us-east-1
+
+<span class="c"># 생성된 퍼블릭 Repo 확인</span>
+aws ecr-public describe-repositories <span class="nt">--region</span> us-east-1 | jq
+<span class="nv">REPOURI</span><span class="o">=</span><span class="si">$(</span>aws ecr-public describe-repositories <span class="nt">--region</span> us-east-1 | jq <span class="nt">-r</span> .repositories[].repositoryUri<span class="si">)</span>
+<span class="nb">echo</span> <span class="nv">$REPOURI</span>
+public.ecr.aws/o2n8a7w3/seongtki/nginx
+
+
+<span class="c"># 이미지 태그</span>
+docker pull nginx:alpine
+docker images
+docker tag nginx:alpine <span class="nv">$REPOURI</span>:latest
+docker images
+
+<span class="c"># 이미지 업로드</span>
+docker push <span class="nv">$REPOURI</span>:latest
+
+<span class="c"># 파드 실행</span>
+kubectl run mynginx <span class="nt">--image</span> <span class="nv">$REPOURI</span>
+
+
+kubectl get pod
+NAME                     READY   STATUS              RESTARTS   AGE
+mario-6d8c76fd8d-2mx7k   1/1     Running             0          10m
+mynginx                  0/1     ContainerCreating   0          3s
+
+kubectl delete pod mynginx
+
+<span class="k">****</span><span class="c"># 퍼블릭 이미지 삭제</span>
+aws ecr-public batch-delete-image <span class="se">\</span>
+      <span class="nt">--repository-name</span> <span class="nv">$NICKNAME</span>/nginx <span class="se">\</span>
+      <span class="nt">--image-ids</span> <span class="nv">imageTag</span><span class="o">=</span>latest <span class="se">\</span>
+      <span class="nt">--region</span> us-east-1
+
+<span class="c"># 퍼블릭 Repo 삭제</span>
+aws ecr-public delete-repository <span class="nt">--repository-name</span> <span class="nv">$NICKNAME</span>/nginx <span class="nt">--force</span> <span class="nt">--region</span> us-east-1
+</code></pre></div></div>
+
+<p>서비스/디플로이먼트(mario 게임) 배포 테스트 with AWS CLB</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 터미널1 (모니터링)</span>
+<span class="s">watch -d 'kubectl get pod,svc'</span>
+
+<span class="c1"># 수퍼마리오 디플로이먼트 배포</span>
+<span class="s">cat &lt;&lt;EOT &gt; mario.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mario</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mario</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">pengbai/docker-supermario</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+   <span class="na">name</span><span class="pi">:</span> <span class="s">mario</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+    <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">8080</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">LoadBalancer</span>
+<span class="s">EOT</span>
+<span class="s">kubectl apply -f mario.yaml</span>
+
+<span class="c1"># 배포 확인 : CLB 배포 확인</span>
+<span class="s">kubectl get deploy,svc,ep mario</span>
+
+<span class="c1"># 마리오 게임 접속 : CLB 주소로 웹 접속</span>
+<span class="s">kubectl get svc mario -o jsonpath={.status.loadBalancer.ingress[0].hostname} | awk '{ print "Maria URL = http://"$1 }'</span>
+
+<span class="s">(Administrator@myeks:N/A) [root@myeks-host ~]# kubectl get svc mario -o jsonpath={.status.loadBalancer.ingress[0].hostname} | awk '{ print "Maria URL = http://"$1 }'</span>
+<span class="s">Maria URL = http://a3fbbb85ed6df4e0288fd3bf4944cfc3-734390217.ap-northeast-2.elb.amazonaws.com</span>
+</code></pre></div></div>
+
+<p><img src="/img/eks-001.png" alt="" /></p>
+

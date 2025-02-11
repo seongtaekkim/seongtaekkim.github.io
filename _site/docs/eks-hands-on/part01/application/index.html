@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="ko-KR"><head><title>카카오 오픈소스 가이드</title><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><link rel="preload" as="style" href="/assets/css/Pretendard-1.3.9/web/static/pretendard.css" crossorigin /><link rel="stylesheet" href="/assets/css/just-the-docs-default.css"> <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BR2W6QHKL"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1BR2W6QHKL'); </script> <script src="/assets/js/vendor/lunr.min.js"></script> <script src="/assets/js/vendor/lunr.stemmer.support.js"></script> <script src="/assets/js/vendor/lunr.ko.js"></script> <script src="/assets/js/just-the-docs.js"></script><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="https://t1.kakaocdn.net/olive/ossguide/kakao.png" type="image/x-icon"><meta name="title" content="카카오 오픈소스 가이드"><meta name="description" content="카카오에서 제공하는 오픈소스 가이드"><base href="/"><meta property="og:type" content="website"><meta property="og:site_name" content="오픈소스 가이드"><meta property="og:title" content="오픈소스 가이드"><meta property="og:url" content="https://kakao.github.io/"><meta property="og:image" content="https://t1.kakaocdn.net/olive/assets/images/opensourceguide.png"><meta property="og:description" content="카카오에서 제공하는 오픈소스 가이드"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="카카오 오픈소스 가이드"><meta name="twitter:description" content="카카오에서 제공하는 오픈소스 가이드"><meta name="twitter:image" content="https://t1.kakaocdn.net/olive/assets/images/opensourceguide_t.png"><body> <a class="skip-to-main" href="#main-content">Skip to main content</a> <svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol id="svg-link" viewBox="0 0 24 24"><title>Link</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path> </svg> </symbol> <symbol id="svg-menu" viewBox="0 0 24 24"><title>Menu</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line> </svg> </symbol> <symbol id="svg-arrow-right" viewBox="0 0 24 24"><title>Expand</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline> </svg> </symbol> <symbol id="svg-external-link" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><title id="svg-external-link-title">(external link)</title><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line> </symbol> <symbol id="svg-doc" viewBox="0 0 24 24"><title>Document</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline> </svg> </symbol> <symbol id="svg-search" viewBox="0 0 24 24"><title>Search</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"> <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </symbol> <symbol id="svg-copy" viewBox="0 0 16 16"><title>Copy</title><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/> </svg> </symbol> <symbol id="svg-copied" viewBox="0 0 16 16"><title>Copied</title><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16"><path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z"/> </svg> </symbol> </svg><div class="side-bar"><div class="site-header"> <a href="/" class="site-title lh-tight"> <span class="mt-2 ml-2"> <span class="fs-5 fw-700 ml-2">SeongTaek</span> </span> </a> <button id="menu-button" class="site-button btn-reset" aria-label="Toggle menu" aria-pressed="false"> <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use xlink:href="#svg-menu"></use></svg> </button></div><nav aria-label="Main" id="site-nav" class="site-nav"><ul class="nav-list"><li class="nav-list-item active"><a href="/" class="nav-list-link bold">목차</a><li class="nav-list-item active"><a href="/docs/eks-hands-on/" class="nav-list-link bold">eks 실습</a><ul class="nav-list"><li class="nav-list-item active"><button class="nav-list-expander btn-reset" aria-label="toggle items in eks 시작하기 category" aria-pressed="true"> <svg viewBox="0 0 32 36" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg> </button><a href="/docs/eks-hands-on/part01/" class="nav-list-link">• eks 시작하기</a><ul class="nav-list"><li class="nav-list-item "> <a href="/docs/eks-hands-on/part01/local-k8s/" class="nav-list-link">- local에서 k8s 설치하기</a><li class="nav-list-item "> <a href="/docs/eks-hands-on/part01/eks/" class="nav-list-link">- eks 설치, public & privaet 모드</a><li class="nav-list-item active"> <a href="/docs/eks-hands-on/part01/application/" class="nav-list-link active">- pod 테스트하기</a></ul></ul></ul></nav></div><div class="main" id="top"><div id="main-header" class="main-header"><div class="search"><div class="search-input-wrap"> <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="검색" aria-label="검색" autocomplete="off"> <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label></div><div id="search-results" class="search-results"></div></div></div><div id="main-content-wrap" class="main-content-wrap"><nav aria-label="Breadcrumb" class="breadcrumb-nav"><ol class="breadcrumb-nav-list"><li class="breadcrumb-nav-list-item"><a href="/docs/eks-hands-on/">eks 실습</a><li class="breadcrumb-nav-list-item"><a href="/docs/eks-hands-on/part01/">eks 시작하기</a><li class="breadcrumb-nav-list-item"><span>pod 테스트하기</span></ol></nav><div id="main-content" class="main-content" role="main"><h3 id="노드에-배포된-컨테이너-정보-확인-containerd-clients-3종--ctr-nerdctl-crictl"> <a href="#노드에-배포된-컨테이너-정보-확인-containerd-clients-3종--ctr-nerdctl-crictl" class="anchor-heading" aria-labelledby="노드에-배포된-컨테이너-정보-확인-containerd-clients-3종--ctr-nerdctl-crictl"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 노드에 배포된 컨테이너 정보 확인 Containerd clients 3종 : ctr, nerdctl, crictl</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(Administrator@myeks:N/A) [root@myeks-host ~]# ssh ec2-user@$N1 ctr --version
+
+ctr github.com/containerd/containerd 1.7.25
+(Administrator@myeks:N/A) [root@myeks-host ~]# ssh ec2-user@$N1 ctr
+NAME:
+   ctr -
+        __
+  _____/ /______
+ / ___/ __/ ___/
+/ /__/ /_/ /
+\___/\__/_/
+
+containerd CLI
+
+
+# 네임스페이스 확인
+ssh ec2-user@$N1 sudo ctr ns list
+NAME   LABELS
+k8s.io
+
+# 컨테이너 리스트 확인
+for i in $N1 $N2; do echo "&gt;&gt; node $i &lt;&lt;"; ssh ec2-user@$i sudo ctr -n k8s.io container list; echo; done
+CONTAINER                                                           IMAGE                                                                                          RUNTIME
+28b6a15c475e32cd8777c1963ba684745573d0b6053f80d2d37add0ae841eb45    602401143452.dkr.ecr-fips.us-east-1.amazonaws.com/eks/pause:3.5                                io.containerd.runc.v2
+4f266ebcee45b133c527df96499e01ec0c020ea72785eb10ef63b20b5826cf7c    602401143452.dkr.ecr-fips.us-east-1.amazonaws.com/eks/pause:3.5                                io.containerd.runc.v2
+...
+
+# 컨테이너 이미지 확인
+for i in $N1 $N2; do echo "&gt;&gt; node $i &lt;&lt;"; ssh ec2-user@$i sudo ctr -n k8s.io image list --quiet; echo; done
+...
+
+# 태스크 리스트 확인
+for i in $N1 $N2; do echo "&gt;&gt; node $i &lt;&lt;"; ssh ec2-user@$i sudo ctr -n k8s.io task list; echo; done
+...
+
+## 예시) 각 테스크의 PID(3706) 확인
+ssh ec2-user@$N1 sudo ps -c 3706
+PID CLS PRI TTY      STAT   TIME COMMAND
+3099 TS   19 ?       Ssl    0:01 kube-proxy --v=2 --config=/var/lib/kube-proxy-config/config --hostname-override=ip-192-168-1-229.ap-northeast-2.compute.internal
+</code></pre></div></div><h4 id="ecr-퍼블릭-repository-사용--퍼블릭-repo-는-설정-시-us-east-1-를-사용"> <a href="#ecr-퍼블릭-repository-사용--퍼블릭-repo-는-설정-시-us-east-1-를-사용" class="anchor-heading" aria-labelledby="ecr-퍼블릭-repository-사용--퍼블릭-repo-는-설정-시-us-east-1-를-사용"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> ECR 퍼블릭 Repository 사용 : 퍼블릭 Repo 는 설정 시 us-east-1 를 사용</h4><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 퍼블릭 ECR 인증</span>
+aws ecr-public get-login-password <span class="nt">--region</span> us-east-1 | docker login <span class="nt">--username</span> AWS <span class="nt">--password-stdin</span> public.ecr.aws
+
+<span class="nb">cat</span> /root/.docker/config.json | jq
+
+<span class="c"># 퍼블릭 Repo 기본 정보 확인</span>
+aws ecr-public describe-registries <span class="nt">--region</span> us-east-1 | jq
+
+<span class="o">{</span>
+  <span class="s2">"registries"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"registryId"</span>: <span class="s2">"738612635754"</span>,
+      <span class="s2">"registryArn"</span>: <span class="s2">"arn:aws:ecr-public::738612635754:registry/738612635754"</span>,
+      <span class="s2">"registryUri"</span>: <span class="s2">""</span>,
+      <span class="s2">"verified"</span>: <span class="nb">false</span>,
+      <span class="s2">"aliases"</span>: <span class="o">[]</span>
+    <span class="o">}</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+
+<span class="c"># 퍼블릭 Repo 생성</span>
+<span class="nv">NICKNAME</span><span class="o">=</span>seongtki
+aws ecr-public create-repository <span class="nt">--repository-name</span> <span class="nv">$NICKNAME</span>/nginx <span class="nt">--region</span> us-east-1
+
+<span class="c"># 생성된 퍼블릭 Repo 확인</span>
+aws ecr-public describe-repositories <span class="nt">--region</span> us-east-1 | jq
+<span class="nv">REPOURI</span><span class="o">=</span><span class="si">$(</span>aws ecr-public describe-repositories <span class="nt">--region</span> us-east-1 | jq <span class="nt">-r</span> .repositories[].repositoryUri<span class="si">)</span>
+<span class="nb">echo</span> <span class="nv">$REPOURI</span>
+public.ecr.aws/o2n8a7w3/seongtki/nginx
+
+
+<span class="c"># 이미지 태그</span>
+docker pull nginx:alpine
+docker images
+docker tag nginx:alpine <span class="nv">$REPOURI</span>:latest
+docker images
+
+<span class="c"># 이미지 업로드</span>
+docker push <span class="nv">$REPOURI</span>:latest
+
+<span class="c"># 파드 실행</span>
+kubectl run mynginx <span class="nt">--image</span> <span class="nv">$REPOURI</span>
+
+
+kubectl get pod
+NAME                     READY   STATUS              RESTARTS   AGE
+mario-6d8c76fd8d-2mx7k   1/1     Running             0          10m
+mynginx                  0/1     ContainerCreating   0          3s
+
+kubectl delete pod mynginx
+
+<span class="k">****</span><span class="c"># 퍼블릭 이미지 삭제</span>
+aws ecr-public batch-delete-image <span class="se">\</span>
+      <span class="nt">--repository-name</span> <span class="nv">$NICKNAME</span>/nginx <span class="se">\</span>
+      <span class="nt">--image-ids</span> <span class="nv">imageTag</span><span class="o">=</span>latest <span class="se">\</span>
+      <span class="nt">--region</span> us-east-1
+
+<span class="c"># 퍼블릭 Repo 삭제</span>
+aws ecr-public delete-repository <span class="nt">--repository-name</span> <span class="nv">$NICKNAME</span>/nginx <span class="nt">--force</span> <span class="nt">--region</span> us-east-1
+</code></pre></div></div><p>서비스/디플로이먼트(mario 게임) 배포 테스트 with AWS CLB</p><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 터미널1 (모니터링)</span>
+<span class="s">watch -d 'kubectl get pod,svc'</span>
+
+<span class="c1"># 수퍼마리오 디플로이먼트 배포</span>
+<span class="s">cat &lt;&lt;EOT &gt; mario.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mario</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mario</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">pengbai/docker-supermario</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+   <span class="na">name</span><span class="pi">:</span> <span class="s">mario</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">mario</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+    <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">8080</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">LoadBalancer</span>
+<span class="s">EOT</span>
+<span class="s">kubectl apply -f mario.yaml</span>
+
+<span class="c1"># 배포 확인 : CLB 배포 확인</span>
+<span class="s">kubectl get deploy,svc,ep mario</span>
+
+<span class="c1"># 마리오 게임 접속 : CLB 주소로 웹 접속</span>
+<span class="s">kubectl get svc mario -o jsonpath={.status.loadBalancer.ingress[0].hostname} | awk '{ print "Maria URL = http://"$1 }'</span>
+
+<span class="s">(Administrator@myeks:N/A) [root@myeks-host ~]# kubectl get svc mario -o jsonpath={.status.loadBalancer.ingress[0].hostname} | awk '{ print "Maria URL = http://"$1 }'</span>
+<span class="s">Maria URL = http://a3fbbb85ed6df4e0288fd3bf4944cfc3-734390217.ap-northeast-2.elb.amazonaws.com</span>
+</code></pre></div></div><p><img src="/img/eks-001.png" alt="" /></p></div></div><div class="search-overlay"></div></div><script src="https://cdn.jsdelivr.net/npm/mermaid@9.1.6/dist/mermaid.min.js"></script> <script> var config = {} ; mermaid.initialize(config); window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid')); </script>
