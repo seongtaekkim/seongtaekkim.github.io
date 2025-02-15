@@ -3,7 +3,7 @@ layout: default
 title: aws에서 eks 구성
 parent: eks network
 grand_parent: eks 실습
-nav_order: 1
+nav_order: 2
 ---
 
 
@@ -83,17 +83,14 @@ ssh -i ~/.ssh/container.pem ec2-user@$(aws cloudformation describe-stacks --stac
 export MNSGID=sg-077fac2b212f084ae
 ~~~
 
-~~~
+~~~sh
 # 인스턴스 공인 IP 확인
 aws ec2 describe-instances --query "Reservations[*].Instances[*].{InstanceID:InstanceId, PublicIPAdd:PublicIpAddress, PrivateIPAdd:PrivateIpAddress, InstanceName:Tags[?Key=='Name']|[0].Value, Status:State.Name}" --filters Name=instance-state-name,Values=running --output table
 
 # 인스턴스 공인 IP 변수 지정
-export N1=<az1 배치된 EC2 공인 IP>
-export N2=<az2 배치된 EC2 공인 IP>
-export N3=<az3 배치된 EC2 공인 IP>
-export N1=43.203.169.0
-export N2=13.125.28.29
-export N3=13.125.255.7
+export N1=43.203.19.0
+export N2=13.15.28.29
+export N3=13.125.255.2
 echo $N1, $N2, $N3
 
 # ping 테스트
@@ -102,7 +99,7 @@ ping -c 2 $N2
 
 # *nodegroup-ng1* 포함된 보안그룹 ID
 export MNSGID=<각자 자신의 관리형 노드 그룹(EC2) 에 보안그룹 ID>
-export MNSGID=sg-075e2e6178557c95a
+export MNSGID=sg-075e2e6172537c95a
 
 # 해당 보안그룹 inbound 에 자신의 집 공인 IP 룰 추가
 aws ec2 authorize-security-group-ingress --group-id $MNSGID --protocol '-1' --cidr $(curl -s ipinfo.io/ip)/32
@@ -132,24 +129,15 @@ exit
 # 운영서버 EC2에서 접속 시
 
 ## 인스턴스 공인 IP 변수 지정
-export N1=<az1 배치된 EC2 내부 IP>
-export N2=<az2 배치된 EC2 내부 IP>
-export N3=<az3 배치된 EC2 내부 IP>
-export N1=192.168.1.186
-export N2=192.168.2.123
-export N3=192.168.3.174
+export N1=192.168.1.180
+export N2=192.168.2.23
+export N3=192.168.3.24
 echo $N1, $N2, $N3
 
 ## ping 테스트
 ping -c 2 $N1
 ping -c 2 $N2
 ~~~
-
-
-
-
-
-
 
 
 
