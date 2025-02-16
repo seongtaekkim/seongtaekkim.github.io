@@ -7,5 +7,5 @@ parent: eks 실습
 ---
 # {{ page.title }}
 <div class="summary">
-eks network 여러 방법을 테스트합니다.
+eks network
 </div>

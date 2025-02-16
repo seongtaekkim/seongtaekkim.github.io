@@ -1299,14 +1299,6 @@ kubectl logs -l app=iperf3-server -f
    kubectl logs -l **app=iperf3-server** -f
    ```
 
-https://seongtaekkim.github.io/blog/categories/serivce-clusterip/
-
-https://seongtaekkim.github.io/blog/categories/serivce-nodeport/
-
-
-
-
-
 
 
 
