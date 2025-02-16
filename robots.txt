@@ -6,4 +6,4 @@ User-agent: Googlebot-mobile
 User-agent: Googlebot-image
 Allow: /
 
-Sitemap: https://kakao.github.io/sitemap.xml
+Sitemap: https://seongtaekkim.github.io/sitemap.xml

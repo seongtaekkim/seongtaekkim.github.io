@@ -14,10 +14,10 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: kakao
+title: seongtaek
 description: OpenSource for documentation
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://kakao.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://seongtaekkim.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: pretty
 

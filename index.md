@@ -7,7 +7,7 @@ permalink: /
 ---
 # {{ page.title }}
 
-## 목차
+<!-- ## 목차 -->
 <div class="content_wrap">
     <div class="contents_block">
         <div class="contents_tt">
