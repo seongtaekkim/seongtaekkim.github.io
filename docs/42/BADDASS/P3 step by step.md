@@ -34,11 +34,11 @@ GNS3 노드 & veth 구성
 
 ## Step 1 – Underlay 인터페이스에 IP 부여
 
-|노드|명령 (Linux)|완료되는 것|검증|
-|---|---|---|---|
-|RR|`ip addr add 10.1.1.1/30 dev eth0`  <br>`ip addr add 10.1.1.5/30 dev eth1`|P2P 링크 IP 설정 시작|`ip -br addr` 로 주소 확인|
-|Leaf‑1|`ip addr add 10.1.1.2/30 dev eth0`|RR↔Leaf‑1 링크 완성|`ping -c1 10.1.1.1`|
-|Leaf‑2|`ip addr add 10.1.1.6/30 dev eth1`|RR↔Leaf‑2 링크 완성|`ping -c1 10.1.1.5`|
+| 노드     | 명령 (Linux)                                                             | 완료되는 것          | 검증                    |
+| ------ | ---------------------------------------------------------------------- | --------------- | --------------------- |
+| RR     | ip addr add 10.1.1.1/30 dev eth0  <br>ip addr add 10.1.1.5/30 dev eth1 | P2P 링크 IP 설정 시작 | `ip -br addr` 로 주소 확인 |
+| Leaf‑1 | ip addr add 10.1.1.2/30 dev eth0                                       | RR↔Leaf‑1 링크 완성 | `ping -c1 10.1.1.1`   |
+| Leaf‑2 | ip addr add 10.1.1.6/30 dev eth1                                       | RR↔Leaf‑2 링크 완성 | `ping -c1 10.1.1.5`   |
 
 > **검증 결과** : 각 Leaf 가 **자신과 RR 사이 /30 주소**로 ping 성공 → 케이블 정상.
 
@@ -46,23 +46,32 @@ GNS3 노드 & veth 구성
 
 ## Step 2 – OSPF Area 0 활성 (Underlay 라우팅)
 
+~~~
 
-`# 모든 노드에서 vtysh -c 'configure terminal' \       -c 'router ospf' \       -c 'network 0.0.0.0/0 area 0' \       -c 'exit'`
+# 모든 노드에서
+vtysh -c 'configure terminal' \
+      -c 'router ospf' \
+      -c 'network 0.0.0.0/0 area 0' \
+      -c 'exit'
 
-|완료되는 것|검증|
-|---|---|
-|RR·Leaf 들이 **OSPF Neighbor** 로 붙고, /30 경로를 교환|RR 또는 Leaf 에서 `vtysh -c "show ip ospf neighbor"` → State `FULL` 2개|
+~~~
+
+
+| 완료되는 것                                        | 검증                                                                 |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| RR·Leaf 들이 **OSPF Neighbor** 로 붙고, /30 경로를 교환 | RR 또는 Leaf 에서 `vtysh -c "show ip ospf neighbor"` → State `FULL` 2개 |
+|                                               |                                                                    |
 
 ---
 
 ## Step 3 – Loopback 주소 설정
 
-| 노드     | 명령                              | 검증                               |
-| ------ | ------------------------------- | -------------------------------- |
-| RR     | `ip addr add 1.1.1.1/32 dev lo` | `ping -c1 1.1.1.1` (자체 loopback) |
-| Leaf‑1 | `ip addr add 1.1.1.2/32 dev lo` | Leaf‑1 → RR `ping -c1 1.1.1.1`   |
-| Leaf‑2 | `ip addr add 1.1.1.3/32 dev lo` | Leaf‑2 ↔ RR ping                 |
-|        |                                 |                                  |
+| 노드     | 명령                            | 검증                             |
+| ------ | ----------------------------- | ------------------------------ |
+| RR     | ip addr add 1.1.1.1/32 dev lo | `ping -c1 1.1.1.1`             |
+| Leaf‑1 | ip addr add 1.1.1.2/32 dev lo | Leaf‑1 → RR `ping -c1 1.1.1.1` |
+| Leaf‑2 | ip addr add 1.1.1.3/32 dev lo | Leaf‑2 ↔ RR ping               |
+|        |                               |                                |
 
 > **OSPF** 가 Loopback /32 경로도 배포하므로 세 노드 모두 서로의 _1.1.1.x_ 로 ping 이 돼야 함.
 
@@ -153,9 +162,9 @@ vtysh -c 'configure terminal' \
 
 ~~~
 
-|완료되는 것|검증|
-|---|---|
-|**EVPN NLRI 교환 채널** 준비, RR 가 reflect client 지정|`vtysh -c "show bgp l2vpn evpn summary"` → AF‑Specific State `Established(0/0/0)`|
+| 완료되는 것                                         | 검증                                                                                |
+| ---------------------------------------------- | --------------------------------------------------------------------------------- |
+| **EVPN NLRI 교환 채널** 준비, RR 가 reflect client 지정 | `vtysh -c "show bgp l2vpn evpn summary"` → AF‑Specific State `Established(0/0/0)` |
 
 > 아직 VNI 경로가 없으므로 NLRI 카운트는 0.
 
@@ -166,6 +175,7 @@ vtysh -c 'configure terminal' \
 ### 공통 명령 (Leaf‑1 예)
 
 ~~~ sh
+# Leaf‑1: 호스트 NIC = eth1
 
 ip link add br0 type bridge
 ip link set br0 up
@@ -173,13 +183,27 @@ ip link set br0 up
 ip link add vxlan10 type vxlan id 10 dstport 4789
 ip link set vxlan10 up
 
-# Leaf‑1: 호스트 NIC = eth1       Leaf‑2: 호스트 NIC = eth0
 brctl addif br0 vxlan10
 brctl addif br0 eth1
 
 
 ~~~
 
+
+~~~ sh
+# Leaf‑2: 호스트 NIC = eth0
+
+ip link add br0 type bridge
+ip link set br0 up
+
+ip link add vxlan10 type vxlan id 10 dstport 4789
+ip link set vxlan10 up
+
+brctl addif br0 vxlan10
+brctl addif br0 eth0
+
+
+~~~
 
 |완료되는 것|검증|
 |---|---|
