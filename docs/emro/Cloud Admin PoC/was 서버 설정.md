@@ -124,7 +124,7 @@ firewall-cmd --list-all
 firewall-cmd --add-port=8080/tcp --permanent
 firewall-cmd --reload
 
-sudo firewall-cmd --permanent --remove-rich-rule="rule family='ipv4' source address='192.168.6.59/32' port port='8080' protocol='tcp' accept"
+sudo firewall-cmd --permanent --remove-rich-rule="rule family='ipv4' source address='192.168.6.59/32' port port='18081' protocol='tcp' accept"
 
 ~~~
 

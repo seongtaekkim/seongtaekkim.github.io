@@ -207,5 +207,7 @@ tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
 
 ~~~
 
+sudo /home/jenkins/svn/csvn/bin/csvn start
 
+sudo /usr/local/csvn/bin/csvn start
 ~~~

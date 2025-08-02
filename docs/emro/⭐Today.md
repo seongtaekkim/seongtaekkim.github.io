@@ -1,21 +1,34 @@
 
+|                 |           |
+| --------------- | --------- |
+| 10.245.130.0/24 | Available |
+| 10.245.132.0/24 | Available |
+| 10.113.101.0/24 |           |
+
+# 카프카 VM구성
 
 
-## npki eks 연결구성
+
+# keycloak 제거
 
 
-write
-read
+# npki 동시성문제 확인 필요
+
+- 인우프로님이 연락해서 업체와 같이 이야기 해보기로 함
+
+fs-00a749eaa9d74d159
+fsap-0b41a1617d6ff7060
 
 
-eks 에 
-
+### 운영 적용
 ~~~
+
+
 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  namespace: emrocloud-dev
+  namespace: emrocloud-prod
   name: pv-efs-npki
 spec:
   capacity:
@@ -24,37 +37,48 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: fs-12345678::fsap-abcdef0123456789
-    volumeAttributes:
-      accessPointId: fsap-abcdef0123456789
-  mountOptions: [tls]
+    volumeHandle: fs-00a749eaa9d74d159::fsap-0aa3be72ea51ec8ab
   
 ~~~
 
 ~~~ yml
 
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: emrocloud-prod
   name: pvc-efs-npki
 spec:
-  accessModes: [ReadWriteMany]
-  resources:
-    requests:
-      storage: 10Gi
+  storageClassName: ""
   volumeName: pv-efs-npki
+  accessModes: [ReadWriteMany]
+  resources: { requests: { storage: 10Gi } }
 
 ~~~
 
 
 ~~~
+# pvc 삭제 후 재생성하기 전에 pv를 released -> available 상태로 변경하여, pvc를 생성할 때에 binding 되도록 한다.
+kubectl patch pv pv-efs-npki -p '{"spec":{"claimRef": null}}'
+
+~~~
+
+~~~
+
+
+
 sudo yum -y install amazon-efs-utils  
-sudo mkdir /mnt/efs-npki
-sudo mount -t efs -o tls,accesspoint=fsap-abcdef0123456789 \
-  fs-12345678:/ /mnt/efs-npki
 
 
-fs-12345678 /mnt/efs-npki efs _netdev,tls,accesspoint=fsap-abcdef0123456789 
+sudo mount -t efs -o tls,accesspoint=fsap-0aa3be72ea51ec8ab fs-00a749eaa9d74d159:/ /usr/local/NPKI2
+sudo umount /usr/local/NPKI
+
+
+# /etc/fstab
+fs-00a749eaa9d74d159:/ /usr/local/NPKI efs _netdev,tls,accesspoint=fsap-0aa3be72ea51ec8ab 0 0
+
+sudo mount -a
 
 ~~~
 
@@ -78,6 +102,251 @@ containers:
     mountPath: /usr/local/NPKI
   - 
 ~~~
+
+
+
+~~~
+
+export AWS_PROFILE=emrocloud-prod-deploy
+aws sts get-caller-identity
+
+aws s3 cp s3://emrocloud-prod-helm/emrocloud-prod-eks/ ./ --recursive
+
+
+s3://emrocloud-prod-helm/emrocloud-prod-eks/
+
+helm lint .
+
+helm package emrocloud
+
+helm repo index . \
+  --url s3://emrocloud-prod-helm/emrocloud-prod-eks \
+  --merge index.yaml 
+
+
+
+aws s3 cp emrocloud-1.0.8.tgz  s3://emrocloud-prod-helm/emrocloud-prod-eks/
+aws s3 cp index.yaml           s3://emrocloud-prod-helm/emrocloud-prod-eks/
+
+
+
+
+
+
+
+
+helm repo update --force-update           # 새 index.yaml 다운로드
+helm search repo emro/emrocloud --versions   # 1.0.8 표시
+helm install demo emro/emrocloud --version 1.0.8
+
+
+curl -I //emrocloud-prod-helm.s3.amazonaws.com/emrocloud-dev-eks/emrocloud-1.0.8.tgz
+
+~~~
+
+
+## jenkins agent 구성
+
+
+
+
+## 스페셜리티
+
+
+아이센트 엄정호 프로 (010199703943)
+- 7.31 추가한 vpn 대역에 대해 down되어잇어 확인요청함 
+
+스페셜링 
+ip 대역 변경 10.113.101.0/32 -> 10.113.101.0/24
+was 에서 ping 10.113.101.1 확인
+
+- 10.245.130.0/24
+- 10.245.132.0/24
+
+
+아울러 신규 HR 시스템의 IP 정보는 다음과 같습니다.
+
+ IP: 10.245.132.133, PORT: 1433
+ IP: 10.245.130.181, PORT:50005
+
+
+## dbsafer 권한 제한 - 플랫폼그룹
+
+개인정보취급 관련해서 이슈 발생을 최소화하기 위해 Cloud플랫폼그룹 인원에 대한 개인정보시스템 접근을 최소화하기 위한 조치
+
+emroCloud 1.0 관리자 계정은 Cloud도메인그룹에서 처리
+
+DBSAFER 을 통한 DB 직접 접속은 조회만 가능하도록 설정할 수 있다면 설정을 변경한 뒤 계정 비활성으로 처리. 단, Log 삭제 모니터링을 위해 작업기간동안 김성택 프로 계정만 한시적 활성 상태 유지 필요.
+
+
+## npki eks 연결구성
+
+
+
+~~~
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: emrocloud-dev
+  name: pv-efs-npki
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: pvc-efs-npki
+    namespace: emrocloud-dev
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-0d9d3c46f2926d4a4::fsap-01c2c6333853ad9e9
+    volumeAttributes:
+      accessPointId: fsap-01c2c6333853ad9e9
+  
+~~~
+
+~~~ yml
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-efs-npki
+spec:
+  accessModes: [ReadWriteMany]
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-efs-npki
+
+
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-efs-npki
+spec:
+  storageClassName: ""
+  volumeName: pv-efs-npki
+  accessModes: ReadWriteMany
+  resources: { requests: { storage: 10Gi } }
+
+~~~
+
+
+~~~
+# pvc 삭제 후 재생성하기 전에 pv를 released -> available 상태로 변경하여, pvc를 생성할 때에 binding 되도록 한다.
+kubectl patch pv pv-efs-npki -p '{"spec":{"claimRef": null}}'
+
+~~~
+
+~~~
+
+
+
+sudo yum -y install amazon-efs-utils  
+
+
+sudo mount -t efs -o tls,accesspoint=fsap-01c2c6333853ad9e9 fs-0d9d3c46f2926d4a4:/ /usr/local/NPKI
+sudo umount /usr/local/NPKI
+
+
+# /etc/fstab
+fs-0d9d3c46f2926d4a4:/ /usr/local/NPKI efs _netdev,tls,accesspoint=fsap-01c2c6333853ad9e9 0 0
+
+sudo mount -a
+
+~~~
+
+
+~~~
+
+  - hostPath:
+      path: /usr/local/NPKI/
+      type: ""
+      
+# Pod (발췌)
+volumes:
+- name: shared
+  persistentVolumeClaim:
+    claimName: pvc-efs-npki
+containers:
+- name: app
+  image: nginx:1.27
+  volumeMounts:
+  - name: shared
+    mountPath: /usr/local/NPKI
+  - 
+~~~
+
+
+
+~~~
+
+# deploy-efs-shell.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: efs-shell
+  namespace: emrocloud-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: efs-shell
+  template:
+    metadata:
+      labels:
+        app: efs-shell
+    spec:
+      containers:
+        - name: busybox
+          image: busybox:1.36
+          command: ["sh", "-c", "sleep infinity"]
+          tty: true
+          volumeMounts:
+            - name: efs
+              mountPath: /usr/local/NPKI
+      volumes:
+        - name: efs
+          persistentVolumeClaim:
+            claimName: pvc-efs-npki
+
+
+
+~~~
+
+
+~~~
+
+
+helm lint .
+
+helm package emrocloud
+
+helm repo index . \
+  --url s3://emrocloud-dev-helm/emrocloud-dev-eks \
+  --merge index.yaml 
+
+aws s3 cp emrocloud-1.0.8.tgz  s3://emrocloud-dev-helm/emrocloud-dev-eks/
+aws s3 cp index.yaml           s3://emrocloud-dev-helm/emrocloud-dev-eks/
+
+
+
+helm repo update --force-update           # 새 index.yaml 다운로드
+helm search repo emro/emrocloud --versions   # 1.0.8 표시
+helm install demo emro/emrocloud --version 1.0.8
+
+
+curl -I //emrocloud-dev-helm.s3.amazonaws.com/emrocloud-dev-eks/emrocloud-1.0.8.tgz
+
+
+
+~~~
+
 
 ## 에코비트
 
