@@ -1,4 +1,220 @@
 
+월요일에 와탭
+클라우드 계정 권한부여 다 해야함.
+
+
+
+~~~
+6600 outbound 필요함
+~~~
+
+
+~~~
+
+########## WHATAP START ############
+WHATAP_HOME=/usr/local/whatap
+WHATAP_JAR=`ls ${WHATAP_HOME}/whatap.agent-*.jar | sort -V | tail -1`
+JAVA_OPTS="${JAVA_OPTS} -javaagent:${WHATAP_JAR} "
+########## WHATAP END ############
+
+~~~
+
+
+security.conf
+~~~
+paramkey=ABCDEF
+threadkill=ABCDEF
+~~~
+
+whatap.conf
+~~~
+actx_meter_enabled=true
+hook_method_patterns=smartsuite.app.*,smartsuite.app.*.*,smartsuite.app.*.*.*,smartsuite.app.*.*.*.*,smartsuite.app.*.*.*.*.*,smartsuite.app.*.*.*.*.*.*,smartsuite.app.*.*.*.*.*.*.*
+httpc_host_meter_enabled=true
+oshi_enabled=true
+oshi_netstat_enabled=true
+profile_http_header_enabled=true
+profile_http_parameter_enabled=true
+profile_sql_param_enabled=true
+profile_sql_resource_enabled=true
+sql_dbc_meter_enabled=true
+tx_caller_meter_enabled=true
+whatap.apdex_time=5000
+license=x605la88c8vdi-z6uapinkueiekc-z3ci37k3c3r9hh
+whatap.server.host=13.124.11.223/13.209.172.35
+
+
+~~~
+
+
+
+
+eks
+~~~
+
+
+/usr/local/emrocloud/tomcat-8.5.82/bin/catalina.sh
+
+${CATALINA_HOME}/bin/catalina.sh
+
+와탭 
+
+
+profiles/k8s/common/docker/conf/whatap/whatap.agent.java.tar.gz
+
+whatap.conf
+security.conf
+
+COPY ./profiles/k8s/common/docker/conf/whatap/whatap.agent.java.tar.gz /usr/local/emrocloud/whatap
+COPY ./profiles/k8s/common/docker/conf/whatap/whatap.conf /usr/local/emrocloud/whatap/
+COPY ./profiles/k8s/common/docker/conf/whatap/security.conf /usr/local/emrocloud/whatap/
+
+
+
+
+~~~
+
+
+~~~ Dockerfile
+
+FROM 720737318830.dkr.ecr.ap-northeast-2.amazonaws.com/tomcat:8.5.82_v2
+
+RUN rm -Rf ${CATALINA_HOME}/webapps/ROOT 
+
+## --> set Tomcat configuration  
+COPY ./profiles/k8s/common/docker/conf/tomcat/lib/* ${CATALINA_HOME}/lib/
+COPY ./profiles/k8s/common/docker/conf/tomcat/conf/web.xml ${CATALINA_HOME}/conf/
+RUN chmod -R 744 ${CATALINA_HOME}/bin/catalina.sh
+
+## --> set external library 
+COPY ./profiles/k8s/common/docker/conf/datadog/lib/dd-java-agent.jar /etc/datadog-agent/APM/dd-java-agent.jar
+
+## --> set Tomcat environment variable
+COPY ./profiles/k8s/common/docker/conf/tomcat/bin/setenv_prod.sh ${CATALINA_HOME}/bin/setenv.sh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## --> add font files
+COPY ./profiles/k8s/common/docker/conf/fonts/gulim /usr/share/fonts/gulim
+COPY ./profiles/k8s/common/docker/conf/fonts/estamp /usr/share/fonts/estamp
+
+## --> set Thumbnail directory config 
+COPY ./profiles/k8s/common/docker/conf/tomcat/conf/context.xml ${CATALINA_HOME}/conf/
+RUN ln -s /smartsuite/thumbnail ${CATALINA_HOME}/webapps/thumbnail
+
+## --> set Crosscert library 
+ENV LD_LIBRARY_PATH=/smartsuite/k8s/conf/local/CrossCertLIB64:$LD_LIBRARY_PATH 
+
+## --> set Tomcat server.xml that docBase for ubistorm
+COPY ./profiles/k8s/common/docker/conf/tomcat/conf/server.xml ${CATALINA_HOME}/conf/
+
+## --> copy WAR file in tomcat webapp folder
+COPY ./target/*.war ${CATALINA_HOME}/webapps/ROOT.war
+
+
+EXPOSE 8080
+
+
+
+~~~
+
+## SES 
+이번주에 내용 꼬ㅓㄱ 보기 
+
+
+
+
+
+## npki 삭제
+
+
+삭제 이력 문법 내용 정리
+-> https://alm.emro.co.kr/browse/CPIFA-229
+
+
+
+## skst 개발 vpn 터널링 끊김
+10시 5분 끊김
+11시 요청 
+아이센트 김예담 프로
+kyd6702@icent.co.kr
+010-5451-6702
+13시에 터널up 되었다고 응답이 왔으나, 실제 서비스포트로 연결되지 않음.
+
+
+## 메가존vpn 문의
+재협상을 위해 aws에서 뭔가 액션할 수 있는 방법이있는지 문의
+https://support.megazone.com/hc/ko/requests/191725
+
+
+
+
+1. VPN 연결 지원
+- 재연결 및 테스트
+
+1. 와탭 
+- 프로젝트 생성, ec2에 세팅
+- k8s 세팅
+1. 스터디 준비
+- 전결
+
+1. npki qa, 운영구성
+- qa efs 구성
+- 운영 eks 및 helm설정 구성
+	- qa.prod 배포적용
+
+1. 운영반영 전 문서공유읽기
+2. - 박웅프로ㅜ님
+
+
+
+## whatap
+
+project 생성
+
+~~~
+# 액세스키
+x605la88c8vdi-z6uapinkueiekc-z3ci37k3c3r9hh
+~~~
+
+
+구성
+eks & emro biz , IF 두 개
+anysigncloud
+
+ec2 tomcat 버전 7 -> 8
+
+## 테크넷 업데이트
+
+
+
+## 스터디 준비
+
+## vpn
+
+로그 켜기
+dtd restart 개념 공부
+
+
+|구분|AWS 기본|**Cisco 권장 예시**|
+|---|---|---|
+|**Phase 1 lifetime**|28 800 초|`crypto ikev1 policy 10` `lifetime 28800`|
+|**Phase 2 lifetime**|3 600 초|`crypto ipsec security-association lifetime seconds 3600`|
+|**DPD/Keepalive**|40 초, action = Clear|IKEv1 → `crypto isakmp keepalive 10 periodic`IKEv2 → `tunnel-group <peer> ipsec-attributes`    `dpd-interval 10 dpd-retries 3`|
+|**Idle Timer**|없음|`vpn-session-timeout none` **또는** 아래 SLA 방식|
+
+
 |                 |           |
 | --------------- | --------- |
 | 10.245.130.0/24 | Available |
@@ -71,7 +287,7 @@ kubectl patch pv pv-efs-npki -p '{"spec":{"claimRef": null}}'
 sudo yum -y install amazon-efs-utils  
 
 
-sudo mount -t efs -o tls,accesspoint=fsap-0aa3be72ea51ec8ab fs-00a749eaa9d74d159:/ /usr/local/NPKI2
+sudo mount -t efs -o tls,accesspoint=fsap-0aa3be72ea51ec8ab fs-00a749eaa9d74d159:/ /usr/local/NPKI
 sudo umount /usr/local/NPKI
 
 
